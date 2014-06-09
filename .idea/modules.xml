@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SenpaiMangaReader.iml" filepath="$PROJECT_DIR$/SenpaiMangaReader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/senpai manga reader/senpai manga reader.iml" filepath="$PROJECT_DIR$/senpai manga reader/senpai manga reader.iml" />
+    </modules>
+  </component>
+</project>
+
