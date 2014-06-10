@@ -19,15 +19,15 @@ import java.net.URL;
 public class getPagina extends AsyncTask<String,String,String> {
     String url;
     Bitmap imagen;
-    ViewManga mActivity;
-    public getPagina(String nImagen, ViewManga viewManga) {
+    MangaView mActivity;
+    public getPagina(String nImagen, MangaView viewManga) {
         url = nImagen;
         mActivity = viewManga;
     }
 
     @Override
     protected String doInBackground(String... strings) {
-        Document doc = null;
+        Document doc;
         try {
             doc = Jsoup.connect(url).get();
             Element element = doc.getElementsByTag("img").first();

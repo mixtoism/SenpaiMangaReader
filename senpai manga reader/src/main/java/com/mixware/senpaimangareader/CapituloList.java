@@ -1,59 +1,62 @@
 package com.mixware.senpaimangareader;
 
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-
 import android.app.ListActivity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import static android.view.View.OnTouchListener;
 
+public class CapituloList extends ListActivity {
 
-public class MangaList extends ListActivity {
-
-    private MangaAdapter mAdapter;
+    private CapituloAdapter mAdapter;
+    Manga m;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setTitle("Listado de Mangas");
-        ArrayList<Manga> mangas = (ArrayList<Manga>) this.getIntent().getSerializableExtra("lista");
-        setContentView(R.layout.activity_manga_list);
-        mAdapter = new MangaAdapter(mangas,this);
-        this.setListAdapter(mAdapter);
-        ListView list = this.getListView();
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mAdapter = new CapituloAdapter(this);
+        setContentView(R.layout.activity_capitulo_list);
+        m = (Manga) this.getIntent().getSerializableExtra("manga");
+        this.setTitle(m.getNombre());
+        getPaginasCapitulos task = new getPaginasCapitulos(this,m);
+        task.execute("");
+        ListView lv = this.getListView();
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                CapitulosManga(i);
+                Capitulo chap = (Capitulo) mAdapter.getItem(i);
+                Intent mIntent = new Intent(CapituloList.this,MangaView.class);
+                mIntent.putExtra("capitulo",chap);
+                startActivity(mIntent);
             }
         });
+
     }
 
-    public void CapitulosManga(int i) {
-        Log.i("","Entro en capitulosmanga");
-        Manga m = (Manga) mAdapter.getItem(i);
-        Intent mIntent = new Intent(this,CapituloList.class);
-        mIntent.putExtra("manga",m);
-        startActivity(mIntent);
+    public void CogerCapitulos(ArrayList<String> paginas) {
+        for(String s : paginas) {
+            getCapitulos caps = new getCapitulos(this,s);
+            caps.execute();
+        }
     }
+
+    public void addCapitulos (ArrayList<Capitulo> caps) {
+        this.setListAdapter(mAdapter);
+        mAdapter.addAll(caps);
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.manga_list, menu);
+        getMenuInflater().inflate(R.menu.capitulo_list, menu);
         return true;
     }
 

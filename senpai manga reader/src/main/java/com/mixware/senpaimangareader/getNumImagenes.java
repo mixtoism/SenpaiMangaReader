@@ -21,9 +21,9 @@ import java.util.ArrayList;
 public class getNumImagenes extends AsyncTask<String,String,String>{
     ArrayList<String> paginas;
     Capitulo chap;
-    ViewManga mActivity;
+    MangaView mActivity;
     Bitmap imagen;
-    public getNumImagenes(Capitulo chap,ViewManga m) {
+    public getNumImagenes(Capitulo chap, MangaView m) {
         this.chap = chap;
         this.mActivity = m;
 
