@@ -10,7 +10,7 @@ buildscript {
 
 allprojects {
     version = VERSION_NAME
-    group = GROUP
+    group = "com.github.chrisbanes.photoview"
 
     repositories {
         mavenCentral()

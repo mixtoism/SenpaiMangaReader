@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SenpaiMangaReader.iml" filepath="$PROJECT_DIR$/SenpaiMangaReader.iml" />
+      <module fileurl="file://$PROJECT_DIR$/senpai manga reader/libs/PhotoView-master/library/library.iml" filepath="$PROJECT_DIR$/senpai manga reader/libs/PhotoView-master/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/senpai manga reader/senpai manga reader.iml" filepath="$PROJECT_DIR$/senpai manga reader/senpai manga reader.iml" />
     </modules>
   </component>

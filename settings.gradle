@@ -1,1 +1,2 @@
-include ':senpai manga reader'
+include ':senpai manga reader', ':library'
+project(':library').projectDir = new File('senpai manga reader/libs/PhotoView-master/library')

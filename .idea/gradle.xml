@@ -7,8 +7,9 @@
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
-            <option value="C:\Users\pargon\AndroidStudioProjects\SenpaiMangaReader" />
-            <option value="C:\Users\pargon\AndroidStudioProjects\SenpaiMangaReader\senpai manga reader" />
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/senpai manga reader" />
+            <option value="$PROJECT_DIR$/senpai manga reader/libs/PhotoView-master/library" />
           </set>
         </option>
       </GradleProjectSettings>
