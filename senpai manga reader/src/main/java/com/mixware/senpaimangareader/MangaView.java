@@ -16,6 +16,8 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -52,6 +54,7 @@ public class MangaView extends Activity {
     private SystemUiHider mSystemUiHider;
 
     private ImageView imageView;
+    PhotoViewAttacher mAttacher;
     private ArrayList<String> enlaces;
     private Bitmap imagen;
     public int nImagen;
@@ -66,6 +69,7 @@ public class MangaView extends Activity {
         final View contentView = findViewById(R.id.fullscreen_content);
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        mAttacher = new PhotoViewAttacher(imageView);
         Intent origin = this.getIntent();
         Capitulo chap = (Capitulo) origin.getSerializableExtra("capitulo");
         getNumImagenes task = new getNumImagenes(chap,this);
@@ -80,54 +84,12 @@ public class MangaView extends Activity {
                     imagenCargada = false;
                     ((ImageView) findViewById(R.id.imageView)).setImageBitmap(imagen);
                     imageView.invalidate();
+                    mAttacher.update();
                     arrancarEvento();
                 }
                 return true;
             }
         });
-
-        // Set up an instance of SystemUiHider to control the system UI for
-        // this activity.
-        mSystemUiHider = SystemUiHider.getInstance(this, contentView, HIDER_FLAGS);
-        mSystemUiHider.setup();
-    /*    mSystemUiHider
-                .setOnVisibilityChangeListener(new SystemUiHider.OnVisibilityChangeListener() {
-                    // Cached values.
-                    int mControlsHeight;
-                    int mShortAnimTime;
-
-                    @Override
-                    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-                    public void onVisibilityChange(boolean visible) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                            // If the ViewPropertyAnimator API is available
-                            // (Honeycomb MR2 and later), use it to animate the
-                            // in-layout UI controls at the bottom of the
-                            // screen.
-                            if (mControlsHeight == 0) {
-                                mControlsHeight = controlsView.getHeight();
-                            }
-                            if (mShortAnimTime == 0) {
-                                mShortAnimTime = getResources().getInteger(
-                                        android.R.integer.config_shortAnimTime);
-                            }
-                            controlsView.animate()
-                                    .translationY(visible ? 0 : mControlsHeight)
-                                    .setDuration(mShortAnimTime);
-                        } else {
-                            // If the ViewPropertyAnimator APIs aren't
-                            // available, simply show or hide the in-layout UI
-                            // controls.
-                            controlsView.setVisibility(visible ? View.VISIBLE : View.GONE);
-                        }
-
-                        if (visible && AUTO_HIDE) {
-                            // Schedule a hide().
-                            delayedHide(AUTO_HIDE_DELAY_MILLIS);
-                        }
-                    }
-                });*/
-        mSystemUiHider.hide();
     }
 
 
@@ -173,6 +135,7 @@ public class MangaView extends Activity {
         Log.i("",""+enlaces.size());
         this.imageView.setImageBitmap(imagen);
         imageView.invalidate();
+        mAttacher.update();
         this.enlaces = enlaces;
         getPagina pag = new getPagina(this.enlaces.get(nImagen),this);
         pag.execute("");

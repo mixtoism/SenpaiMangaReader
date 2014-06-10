@@ -15,12 +15,27 @@ import java.util.ArrayList;
 public class MangaAdapter implements ListAdapter{
     Context mContext;
     ArrayList<Manga> mItems;
+    ArrayList<Manga> hidden = new ArrayList<Manga>();
+    String searchTerm;
 
     public MangaAdapter(ArrayList<Manga> mItems, Context mContext) {
         this.mItems = mItems;
         this.mContext = mContext;
+        searchTerm = "";
+        for(Manga m : mItems) hidden.add(m);
+
     }
 
+    public void filter (String s) {
+        mItems = new ArrayList<Manga>();
+        for(Manga m : hidden) mItems.add(m);
+
+            for (Manga m : mItems) {
+                if (!m.getNombre().contains(s)) {
+                    mItems.remove(m);
+                }
+            }
+    }
     @Override
     public boolean areAllItemsEnabled() {
         return true;
@@ -58,7 +73,7 @@ public class MangaAdapter implements ListAdapter{
 
     @Override
     public boolean hasStableIds() {
-        return true;
+        return false;
     }
 
     @Override

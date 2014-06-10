@@ -1,5 +1,6 @@
 package com.mixware.senpaimangareader;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -13,10 +14,11 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 
-public class CapituloList extends ListActivity {
+public class CapituloList extends ActionBarActivity {
 
     private CapituloAdapter mAdapter;
     Manga m;
+    ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +28,7 @@ public class CapituloList extends ListActivity {
         this.setTitle(m.getNombre());
         getPaginasCapitulos task = new getPaginasCapitulos(this,m);
         task.execute("");
-        ListView lv = this.getListView();
+        lv = (ListView) findViewById(R.id.listChap);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -47,7 +49,7 @@ public class CapituloList extends ListActivity {
     }
 
     public void addCapitulos (ArrayList<Capitulo> caps) {
-        this.setListAdapter(mAdapter);
+        lv.setAdapter(mAdapter);
         mAdapter.addAll(caps);
 
     }

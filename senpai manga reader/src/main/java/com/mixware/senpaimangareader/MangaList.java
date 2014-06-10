@@ -1,7 +1,10 @@
 package com.mixware.senpaimangareader;
 
+import android.app.Activity;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,7 +25,7 @@ import java.util.ArrayList;
 import static android.view.View.OnTouchListener;
 
 
-public class MangaList extends ListActivity {
+public class MangaList extends ActionBarActivity {
 
     private MangaAdapter mAdapter;
     @Override
@@ -32,8 +35,9 @@ public class MangaList extends ListActivity {
         ArrayList<Manga> mangas = (ArrayList<Manga>) this.getIntent().getSerializableExtra("lista");
         setContentView(R.layout.activity_manga_list);
         mAdapter = new MangaAdapter(mangas,this);
-        this.setListAdapter(mAdapter);
-        ListView list = this.getListView();
+
+        ListView list = (ListView) findViewById(R.id.list);
+        list.setAdapter(mAdapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -54,6 +58,21 @@ public class MangaList extends ListActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.manga_list, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return onQueryTextChange(s);
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                mAdapter.filter(s);
+                return false;
+            }
+        });
+
         return true;
     }
 
