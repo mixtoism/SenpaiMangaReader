@@ -2,8 +2,12 @@ package com.mixware.senpaimangareader;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -12,7 +16,7 @@ import java.util.ArrayList;
 /**
  * Created by pargon on 08/06/2014.
  */
-public class MangaAdapter implements ListAdapter{
+public class MangaAdapter extends BaseAdapter implements Filterable{
     Context mContext;
     ArrayList<Manga> mItems;
     ArrayList<Manga> hidden = new ArrayList<Manga>();
@@ -22,38 +26,13 @@ public class MangaAdapter implements ListAdapter{
         this.mItems = mItems;
         this.mContext = mContext;
         searchTerm = "";
-        for(Manga m : mItems) hidden.add(m);
+        hidden =(ArrayList<Manga>) mItems.clone();
 
     }
 
-    public void filter (String s) {
-        mItems = new ArrayList<Manga>();
-        for(Manga m : hidden) mItems.add(m);
-
-            for (Manga m : mItems) {
-                if (!m.getNombre().contains(s)) {
-                    mItems.remove(m);
-                }
-            }
-    }
     @Override
     public boolean areAllItemsEnabled() {
         return true;
-    }
-
-    @Override
-    public boolean isEnabled(int i) {
-        return true;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver dataSetObserver) {
-
-    }
-
-    @Override
-    public void unregisterDataSetObserver(DataSetObserver dataSetObserver) {
-
     }
 
     @Override
@@ -71,30 +50,57 @@ public class MangaAdapter implements ListAdapter{
         return i;
     }
 
-    @Override
-    public boolean hasStableIds() {
-        return false;
-    }
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView tv = new TextView(mContext);
-        tv.setText(mItems.get(i).getNombre());
-        return tv;
-    }
 
-    @Override
-    public int getItemViewType(int i) {
-        return 1;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 1;
+            TextView tv = new TextView(mContext);
+            tv.setText(mItems.get(i).getNombre());
+            return tv;
     }
 
     @Override
     public boolean isEmpty() {
         return mItems.isEmpty();
     }
+    Filter newFilter;
+    @Override
+    public Filter getFilter() {
+        if(newFilter == null) {
+            newFilter = new Filter() {
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    notifyDataSetChanged();
+                    mItems = (ArrayList<Manga>)results.values;
+                    notifyDataSetInvalidated();
+                }
+
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+                    mItems = (ArrayList<Manga>)hidden.clone();
+                    constraint = constraint.toString().toLowerCase();
+                    ArrayList<Manga> filteredFriendList = new ArrayList<Manga>();
+                    for(int i=0; i<mItems.size(); i++) {
+                        Manga newFriend = mItems.get(i);
+                        if(newFriend.getNombre().toLowerCase().contains(constraint)) {
+                            filteredFriendList.add(newFriend);
+                        }
+                    }
+
+                    FilterResults newFilterResults = new FilterResults();
+                    newFilterResults.count = filteredFriendList.size();
+                    newFilterResults.values = filteredFriendList;
+                    return newFilterResults;
+                }
+            };
+        }
+        return newFilter;
+    }
+
+
+
+
 }
+
+

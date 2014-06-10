@@ -12,6 +12,8 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -59,6 +61,7 @@ public class MangaView extends Activity {
     private Bitmap imagen;
     public int nImagen;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,6 +77,7 @@ public class MangaView extends Activity {
         Capitulo chap = (Capitulo) origin.getSerializableExtra("capitulo");
         getNumImagenes task = new getNumImagenes(chap,this);
         task.execute("");
+
         this.imageView.setOnTouchListener(new ImageView.OnTouchListener() {
 
             @Override

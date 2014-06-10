@@ -68,7 +68,7 @@ public class MangaList extends ActionBarActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                mAdapter.filter(s);
+                mAdapter.getFilter().filter(s);
                 return false;
             }
         });
