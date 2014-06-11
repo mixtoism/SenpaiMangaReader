@@ -19,6 +19,7 @@ public class CapituloList extends ActionBarActivity {
     private CapituloAdapter mAdapter;
     Manga m;
     ListView lv;
+    getPaginasCapitulos task;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,7 +27,7 @@ public class CapituloList extends ActionBarActivity {
         setContentView(R.layout.activity_capitulo_list);
         m = (Manga) this.getIntent().getSerializableExtra("manga");
         this.setTitle(m.getNombre());
-        getPaginasCapitulos task = new getPaginasCapitulos(this,m);
+        task = new getPaginasCapitulos(this,m);
         task.execute("");
         lv = (ListView) findViewById(R.id.listChap);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -46,6 +47,7 @@ public class CapituloList extends ActionBarActivity {
             getCapitulos caps = new getCapitulos(this,s);
             caps.execute();
         }
+        task.cancel(true);
     }
 
     public void addCapitulos (ArrayList<Capitulo> caps) {

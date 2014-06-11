@@ -43,6 +43,7 @@ public class getMangas extends AsyncTask<String,String,String> {
         } catch (IOException ex) {
             mangas = null;
             Log.i("getMangas TASK","ERROR DOWNLOADING");
+            doInBackground("");
         }
         return null;    }
 

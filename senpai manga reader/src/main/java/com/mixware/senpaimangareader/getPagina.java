@@ -19,10 +19,12 @@ import java.net.URL;
 public class getPagina extends AsyncTask<String,String,String> {
     String url;
     Bitmap imagen;
+    int i;
     MangaView mActivity;
-    public getPagina(String nImagen, MangaView viewManga) {
+    public getPagina(String nImagen, MangaView viewManga,int i) {
         url = nImagen;
         mActivity = viewManga;
+        this.i = i;
     }
 
     @Override
@@ -46,7 +48,7 @@ public class getPagina extends AsyncTask<String,String,String> {
     }
 
     protected void onPostExecute(String res) {
-        mActivity.nextImage(imagen);
+        mActivity.nextImage(imagen,i);
     }
 
 }

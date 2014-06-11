@@ -167,6 +167,8 @@ public class FullscreenActivity extends Activity {
     public void nextActivity(ArrayList<Manga> mangas) {
         Intent mIntent = new Intent(this,MangaList.class);
         mIntent.putExtra("lista",mangas);
+
         startActivity(mIntent);
+        this.getmangas.cancel(true);
     }
 }

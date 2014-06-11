@@ -52,6 +52,7 @@ public class MangaList extends ActionBarActivity {
         Intent mIntent = new Intent(this,CapituloList.class);
         mIntent.putExtra("manga",m);
         startActivity(mIntent);
+
     }
 
     @Override
