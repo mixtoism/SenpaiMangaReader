@@ -25,8 +25,9 @@ public class getCapitulos extends AsyncTask<String,String,String>{
 
     @Override
     protected String doInBackground(String... strings) {
-        mChaps = new ArrayList<Capitulo>();
         try {
+            mChaps = new ArrayList<Capitulo>();
+
             Document doc = Jsoup.connect(url).get();
             Elements elements = doc.getElementsByClass("con");
             Element element = elements.first();
@@ -41,7 +42,7 @@ public class getCapitulos extends AsyncTask<String,String,String>{
                 mChaps.add(new Capitulo(s));
             }
         } catch (IOException ex) {
-            Log.i("getCapitulos TASK","OCURRIO ALGUN ERROR");
+            Log.i("getCapitulos TASK","OCURRIO ALGUN ERROR buscando las paginas");
         }
         return null;
     }

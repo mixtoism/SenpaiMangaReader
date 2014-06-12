@@ -1,12 +1,8 @@
 package com.mixware.senpaimangareader;
 
-import com.mixware.senpaimangareader.util.SystemUiHider;
-
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GestureDetectorCompat;
@@ -14,13 +10,11 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
+import com.mixware.senpaimangareader.util.SystemUiHider;
 
-import uk.co.senab.photoview.PhotoViewAttacher;
+import java.util.ArrayList;
 
 
 /**
@@ -150,17 +144,19 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
     int maximo = -1;
 
     public synchronized void nextImage(Bitmap imagen,int i) {
+        if(imagen == null) {pag[i] = new getPagina(enlaces.get(i),this,i);pag[i].execute();return;} //Reset the thread, if it have failed
         numHilos++;
         maximo = maximo > i ? maximo : i;
         Log.i("CONTROL DE HILOS","Entra el hilo "+i);
         this.imagen[i] = imagen;
         pag[i].cancel(true); // Close the thread
     }
+    public final int hilosMAX = 3;
     public Runnable r = new Runnable() {
         @Override
         public void run() {
             while(!finish)
-                if(numHilos == 5) {
+                if(numHilos == hilosMAX) {
                     numHilos = 0;
                     lanzarHilo(maximo+1);
                 }
@@ -172,7 +168,7 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
      * @param ini
      */
     public void lanzarHilo(int ini) {
-        for(int i = ini; (i < ini + 5) &&( i < enlaces.size());i++) {
+        for(int i = ini; (i < ini + hilosMAX) &&( i < enlaces.size());i++) {
             Log.i("Lanzo",""+i);
             pag[i] = new getPagina(this.enlaces.get(i),this,i);
             pag[i].execute("");
@@ -257,6 +253,17 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
             this.imageView.setImageBitmap(imagen[actual]);
             mAttacher.update();
         }
+    }
+
+    /**
+     * Frees memory for mangaReader
+     *
+     */
+    public void liberarImagen() {
+        int con = 0;
+        while(imagen[con] == null && con < actual) con++;
+        imagen[con].recycle();
+        imagen[con] = null;
     }
 
 }

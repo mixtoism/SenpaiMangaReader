@@ -51,7 +51,8 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
             conn.connect();
             imagen = BitmapFactory.decodeStream(conn.getInputStream());
         } catch (IOException ex) {
-            Log.i("getNumImagenes TASK", "OCURRIO ALGUN ERROR");
+            Log.i("getNumImagenes TASK", "OCURRIO ALGUN ERROR"+ex.toString());
+            doInBackground("");
         }
         return "";
     }
