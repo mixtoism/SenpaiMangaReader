@@ -2,6 +2,7 @@ package com.mixware.senpaimangareader;
 
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.ImageView;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -33,5 +34,10 @@ public class MangaPageViewAttacher extends PhotoViewAttacher {
             super.onFling(startX,startY,velocityX,velocityY);
         }
 
+    }
+    public boolean onTouch(View v,MotionEvent e) {
+        if(e.getAction() == MotionEvent.ACTION_DOWN)
+            mangaView.showTopNavegationBar();
+        return super.onTouch(v,e);
     }
 }

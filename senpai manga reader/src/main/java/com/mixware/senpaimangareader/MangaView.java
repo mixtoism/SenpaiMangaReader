@@ -3,17 +3,21 @@ package com.mixware.senpaimangareader;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
+import android.os.Environment;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.mixware.senpaimangareader.util.SystemUiHider;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 
@@ -23,33 +27,7 @@ import java.util.ArrayList;
  *
  * @see SystemUiHider
  */
-public class MangaView extends Activity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * If set, will toggle the system UI visibility upon interaction. Otherwise,
-     * will show the system UI visibility upon interaction.
-     */
-
-    /**
-     * The flags to pass to {@link SystemUiHider#getInstance}.
-     */
-    private static final int HIDER_FLAGS = SystemUiHider.FLAG_HIDE_NAVIGATION;
-
-    /**
-     * The instance of the {@link SystemUiHider} for this activity.
-     */
-    private SystemUiHider mSystemUiHider;
+public class MangaView extends Activity {
 
     private ImageView imageView;
     MangaPageViewAttacher mAttacher;
@@ -61,11 +39,9 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mGestureDetector= new GestureDetectorCompat(this,this);
-        mGestureDetector.setOnDoubleTapListener(this);
 
         setContentView(R.layout.activity_manga_view);
-
+        findViewById(R.id.manga_top).setVisibility(View.INVISIBLE);
         final View controlsView = findViewById(R.id.fullscreen_content_controls);
         final View contentView = findViewById(R.id.fullscreen_content);
 
@@ -75,42 +51,10 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
         Capitulo chap = (Capitulo) origin.getSerializableExtra("capitulo");
         getNumImagenes task = new getNumImagenes(chap,this);
         task.execute("");
-
-     /**   this.imageView.setOnTouchListener(new ImageView.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                mGestureDetector.onTouchEvent(motionEvent);
-                return false;
-            }
-        }); **/
     }
 
 
-    /**
-     * Touch listener to use for in-layout UI controls to delay hiding the
-     * system UI. This is to prevent the jarring behavior of controls going away
-     * while interacting with activity UI.
-     */
 
-
-    Handler mHideHandler = new Handler();
-    Runnable mHideRunnable = new Runnable() {
-        @Override
-        public void run() {
-            mSystemUiHider.hide();
-        }
-    };
-
-    /**
-     * Schedules a call to hide() in [delay] milliseconds, canceling any
-     * previously scheduled calls.
-     */
-    private void delayedHide(int delayMillis) {
-        mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis);
-    }
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -125,6 +69,7 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
         this.imageView.setImageBitmap(imagen);
         imageView.invalidate();
         mAttacher.update();
+        this.liberados = new boolean[enlaces.size()];
         this.imagen = new Bitmap[enlaces.size()];
         this.imagen[0] = imagen;
         for(int i = 1; i < enlaces.size(); i++) {
@@ -178,92 +123,137 @@ public class MangaView extends Activity implements GestureDetector.OnGestureList
     }
     boolean finish = false;
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event){
-        this.mGestureDetector.onTouchEvent(event);
-        // Be sure to call the superclass implementation
-        return super.onTouchEvent(event);
-    }
-
-    @Override
-    public boolean onDown(MotionEvent event) {
-        Log.d(DEBUG_TAG,"onDown: " + event.toString());
-        return true;
-    }
-
-    @Override
-    public boolean onFling(MotionEvent event1, MotionEvent event2,
-                           float velocityX, float velocityY) {
-        Log.d(DEBUG_TAG, "onFling: " + event1.toString()+event2.toString());
-        return true;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent event) {
-        Log.d(DEBUG_TAG, "onLongPress: " + event.toString());
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-                            float distanceY) {
-        Log.d(DEBUG_TAG, "onScroll: " + e1.toString()+e2.toString());
-        return true;
-    }
-
-    @Override
-    public void onShowPress(MotionEvent event) {
-        Log.d(DEBUG_TAG, "onShowPress: " + event.toString());
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent event) {
-        Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
-        return true;
-    }
-
-    @Override
-    public boolean onDoubleTap(MotionEvent event) {
-        Log.d(DEBUG_TAG, "onDoubleTap: " + event.toString());
-        return true;
-    }
-
-    @Override
-    public boolean onDoubleTapEvent(MotionEvent event) {
-        Log.d(DEBUG_TAG, "onDoubleTapEvent: " + event.toString());
-        return true;
-    }
-
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent event) {
-        Log.d(DEBUG_TAG, "onSingleTapConfirmed: " + event.toString());
-        return true;
-    }
     private String DEBUG_TAG = "GESTURE DETECTION";
 
     public void nextImage() {
         if(actual + 1 < enlaces.size() && imagen[actual + 1] != null) {
             actual++;
             this.imageView.setImageBitmap(imagen[actual]);
-            mAttacher.update();
         }
+        else if(actual + 1 < enlaces.size() && liberados[actual +1]) {
+            //TODO : Load the image from file
+            LiberarPrimera(); //Free the first posible
+            actual++;
+            imagen[actual] = readImageFromDisk(actual);
+            this.imageView.setImageBitmap(imagen[actual]);
+        }
+        mAttacher.update();
     }
     public void previousImage() {
         if(actual - 1 >= 0 && imagen[actual -1 ] != null) {
             actual--;
             this.imageView.setImageBitmap(imagen[actual]);
-            mAttacher.update();
         }
+        else if(actual - 1 >= 0 && liberados[actual - 1]) {
+            liberarUltima(); // Free the last downloaded image
+            actual--;
+            imagen[actual] = readImageFromDisk(actual);
+            this.imageView.setImageBitmap(imagen[actual]);
+        }
+        mAttacher.update();
     }
 
     /**
      * Frees memory for mangaReader
+     * TODO : Write the image to a file, to be read without reconnecting
      *
      */
-    public void liberarImagen() {
-        int con = 0;
-        while(imagen[con] == null && con < actual) con++;
+    public boolean liberados[];
+
+    //These two methods are necessary because of the little ram that DalvikVM offers to android
+    //They don't have to be invoked if ATR is used, but for now, they'll are essential
+    /**
+     * Saves the last downloaded image and frees the ram space
+     * Marks it as liberada
+     */
+    public void liberarUltima() {
+        int con = enlaces.size()-1;
+        while(imagen[con] == null && con > actual) con--;
+        writeimageToDisk(imagen[con],con);
         imagen[con].recycle();
         imagen[con] = null;
+        liberados[con] = true;
+    }
+
+    /**
+     * Saves the first downloaded image available and frees ram space
+     */
+    public void LiberarPrimera() {
+        int con = 0;
+        while(imagen[con] == null && con < actual) con++;
+        writeimageToDisk(imagen[con],con);
+        imagen[con].recycle();
+        imagen[con] = null;
+        liberados[con] = true;
+
+    }
+
+    public void writeimageToDisk(Bitmap image,int idx) {
+        Log.i("Control de memoria","Entro a write image to disk");
+        String estado = Environment.getExternalStorageState();
+         if(estado.equals(Environment.MEDIA_MOUNTED)) {
+             String path = getExternalFilesDir(null).toString();
+             OutputStream fOut = null;
+             File file = new File(path, idx+".snp");
+             try {
+                 fOut = new FileOutputStream(file);
+                 image.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                 fOut.flush();
+                 fOut.close();
+                 Log.i("Control de memoria","Write To Disk");
+
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+
+
+         }
+        //TODO: Implement, and don't forget to add Android permission external storage
+    }
+
+    public Bitmap readImageFromDisk (int idx) {
+        Log.i("Control de memoria","Entro a read image to disk");
+
+        String estado = Environment.getExternalStorageState();
+        Bitmap bitmap = null;
+        if(estado.equals(Environment.MEDIA_MOUNTED) || estado.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
+            File ruta_sd = getExternalFilesDir(null);
+            bitmap = BitmapFactory.decodeFile(ruta_sd.getAbsolutePath()+"/"+idx+".snp");
+            Log.i("Control de memoria","Read from disk");
+        }
+        return bitmap;
+    }
+
+    public void showTopNavegationBar() {
+        final View v = findViewById(R.id.manga_top);
+        if(v.getVisibility()==View.INVISIBLE) {
+            v.setVisibility(View.VISIBLE);
+            new AsyncTask<String,String,String>() {
+                @Override
+                protected String doInBackground(String... strings) {
+                    try {
+                        wait(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return "";
+                }
+                protected void onPostExecute(String res) {
+                    v.setVisibility(View.INVISIBLE);
+                }
+            };
+        }
+        else v.setVisibility(View.INVISIBLE);
+    }
+
+    public void onPause() {
+        String estado = Environment.getExternalStorageState();
+
+        for(int i = 0; i < pag.length; i++) {
+            File f = new File(""); //TODO: finalize method
+            pag[i].cancel(true);
+        }
+
     }
 
 }

@@ -56,7 +56,7 @@ public class getPagina extends AsyncTask<String,String,String> {
             imagen = BitmapFactory.decodeStream(inputStream);
         } catch (OutOfMemoryError e) {
             Log.i("IMAGEIO:", e.toString());
-            mActivity.liberarImagen();
+            mActivity.LiberarPrimera();
             loadImage(inputStream);
         }
 
