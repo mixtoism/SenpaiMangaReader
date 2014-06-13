@@ -2,7 +2,8 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#ffffffff">
 
     <TextView
         android:layout_width="wrap_content"
@@ -12,5 +13,6 @@
         android:textColor="#ffff8b56"
         android:textSize="30dp"
         android:clickable="true"
-        android:id="@+id/textView" />
+        android:id="@+id/textView"
+        />
 </LinearLayout>

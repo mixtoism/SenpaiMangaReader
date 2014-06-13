@@ -253,7 +253,7 @@ public class MangaView extends Activity {
             File f = new File(""); //TODO: finalize method
             pag[i].cancel(true);
         }
-
+        super.onPause();
     }
 
 }
