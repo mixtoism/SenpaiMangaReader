@@ -1,7 +1,5 @@
 package com.mixware.senpaimangareader;
 
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -13,31 +11,33 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class MangaPageViewAttacher extends PhotoViewAttacher {
 
     private MangaView mangaView;
-    public MangaPageViewAttacher(ImageView imageView,MangaView mangaView) {
+    public MangaPageViewAttacher(ImageView imageView, final MangaView mangaView) {
         super(imageView);
         this.mangaView = mangaView;
+        this.setOnPhotoTapListener(new OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                mangaView.showTopNavegationBar();
+            }
+        });
+        this.setOnViewTapListener(new OnViewTapListener() {
+            @Override
+            public void onViewTap(View view, float x, float y) {
+                mangaView.showTopNavegationBar();
+            }
+        });
     }
 
     public void onFling(float startX, float startY, float velocityX,
                         float velocityY) {
         if(getScale() == getMinimumScale()) {
-            Log.i("MangaAttacher","ENTRO EN EL onFling");
-            if(velocityX > 0) {
-                mangaView.nextImage();
-            }
-            else {
-                Log.i("MangaAttacher","Pues no, pero al menos entro");
-                mangaView.previousImage();
-            }
+            if(velocityX > 0) mangaView.nextImage();
+            else  mangaView.previousImage();
+            mangaView.actualizarTexto();
         }
         else {
             super.onFling(startX,startY,velocityX,velocityY);
         }
 
-    }
-    public boolean onTouch(View v,MotionEvent e) {
-        if(e.getAction() == MotionEvent.ACTION_DOWN)
-            mangaView.showTopNavegationBar();
-        return super.onTouch(v,e);
     }
 }

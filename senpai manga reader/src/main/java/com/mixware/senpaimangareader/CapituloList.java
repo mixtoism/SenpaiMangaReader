@@ -1,15 +1,14 @@
 package com.mixware.senpaimangareader;
 
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -33,13 +32,18 @@ public class CapituloList extends ActionBarActivity {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Capitulo chap = (Capitulo) mAdapter.getItem(i);
-                Intent mIntent = new Intent(CapituloList.this,MangaView.class);
-                mIntent.putExtra("capitulo",chap);
-                startActivity(mIntent);
+                Toast.makeText(CapituloList.this,"Pulsado",Toast.LENGTH_SHORT).show();
+
             }
         });
 
+    }
+
+    public void nextActivity(int i) {
+        Capitulo chap = (Capitulo) mAdapter.getItem(i);
+        Intent mIntent = new Intent(CapituloList.this, MangaView.class);
+        mIntent.putExtra("capitulo", chap);
+        startActivity(mIntent);
     }
 
     public void CogerCapitulos(ArrayList<String> paginas) {

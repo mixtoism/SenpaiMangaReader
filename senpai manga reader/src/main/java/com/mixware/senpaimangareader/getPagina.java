@@ -57,6 +57,7 @@ public class getPagina extends AsyncTask<String,String,String> {
         } catch (OutOfMemoryError e) {
             Log.i("IMAGEIO:", e.toString());
             mActivity.LiberarPrimera();
+            mActivity.pausarHilos();
             loadImage(inputStream);
         }
 

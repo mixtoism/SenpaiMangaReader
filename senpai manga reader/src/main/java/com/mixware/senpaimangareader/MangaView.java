@@ -4,13 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mixware.senpaimangareader.util.SystemUiHider;
 
@@ -29,8 +31,17 @@ import java.util.ArrayList;
  */
 public class MangaView extends Activity {
 
+
+    private boolean liberados[];
+    private boolean finish = false;
+    private int actual;
+    private Thread t;
+    private getPagina pag[];
+    private int numHilos = 0;
+    private int maximo = -1;
+    private String DEBUG_TAG = "GESTURE DETECTION";
     private ImageView imageView;
-    MangaPageViewAttacher mAttacher;
+    private MangaPageViewAttacher mAttacher;
     private ArrayList<String> enlaces;
     private Bitmap imagen[];
 
@@ -38,31 +49,34 @@ public class MangaView extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-        setContentView(R.layout.activity_manga_view);
-        findViewById(R.id.manga_top).setVisibility(View.INVISIBLE);
-        final View controlsView = findViewById(R.id.fullscreen_content_controls);
-        final View contentView = findViewById(R.id.fullscreen_content);
-
-        imageView = (ImageView) findViewById(R.id.imageView);
-        mAttacher = new MangaPageViewAttacher(imageView,this);
         Intent origin = this.getIntent();
         Capitulo chap = (Capitulo) origin.getSerializableExtra("capitulo");
         getNumImagenes task = new getNumImagenes(chap,this);
         task.execute("");
+
+        setContentView(R.layout.activity_manga_view);
+        findViewById(R.id.manga_top).setVisibility(View.INVISIBLE);
+        findViewById(R.id.manga_top).findViewById(R.id.backToMenu).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                dofinish();
+                return true;
+            }
+        });
+        imageView = (ImageView) findViewById(R.id.imageView);
+        mAttacher = new MangaPageViewAttacher(imageView,this);
     }
 
 
 
-
+    private void dofinish(){finish();}
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
     }
 
-    int actual;
+
     public void showAndLoad(ArrayList<String> enlaces, Bitmap imagen) {
         Log.i("",""+enlaces.size());
         actual = 0;
@@ -77,16 +91,12 @@ public class MangaView extends Activity {
         }
         this.enlaces = enlaces;
         pag = new getPagina[enlaces.size()];
+        actualizarTexto();
 
         lanzarHilo(1);
        t = new Thread(r);
        t.start();
     }
-
-    Thread t;
-    getPagina pag[];
-    int numHilos = 0;
-    int maximo = -1;
 
     public synchronized void nextImage(Bitmap imagen,int i) {
         if(imagen == null) {pag[i] = new getPagina(enlaces.get(i),this,i);pag[i].execute();return;} //Reset the thread, if it have failed
@@ -121,9 +131,6 @@ public class MangaView extends Activity {
 
         }
     }
-    boolean finish = false;
-
-    private String DEBUG_TAG = "GESTURE DETECTION";
 
     public void nextImage() {
         if(actual + 1 < enlaces.size() && imagen[actual + 1] != null) {
@@ -153,13 +160,15 @@ public class MangaView extends Activity {
         mAttacher.update();
     }
 
+    public void actualizarTexto() {
+        ((TextView)(findViewById(R.id.manga_top).findViewById(R.id.pagdepag))).setText(actual + " de " + imagen.length);
+    }
+
     /**
      * Frees memory for mangaReader
      * TODO : Write the image to a file, to be read without reconnecting
      *
      */
-    public boolean liberados[];
-
     //These two methods are necessary because of the little ram that DalvikVM offers to android
     //They don't have to be invoked if ATR is used, but for now, they'll are essential
     /**
@@ -205,10 +214,13 @@ public class MangaView extends Activity {
              } catch (IOException e) {
                  e.printStackTrace();
              }
-
-
          }
-        //TODO: Implement, and don't forget to add Android permission external storage
+    }
+    public void pausarHilos() {
+        int i = 0;
+        for(i+=1; i < enlaces.size();i++) {
+            //TODO: pause the AsyncTask or cancel it
+        }
     }
 
     public Bitmap readImageFromDisk (int idx) {
@@ -227,33 +239,36 @@ public class MangaView extends Activity {
     public void showTopNavegationBar() {
         final View v = findViewById(R.id.manga_top);
         if(v.getVisibility()==View.INVISIBLE) {
-            v.setVisibility(View.VISIBLE);
-            new AsyncTask<String,String,String>() {
+            v.setVisibility(View.VISIBLE); //wont hide on time
+            new Thread(new Runnable() {
+
                 @Override
-                protected String doInBackground(String... strings) {
-                    try {
-                        wait(3000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    return "";
+                public void run() {
+                    SystemClock.sleep(2000);
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            hideTopNavegationBar();
+                        }
+                    });
                 }
-                protected void onPostExecute(String res) {
-                    v.setVisibility(View.INVISIBLE);
-                }
-            };
+            }).start();
         }
-        else v.setVisibility(View.INVISIBLE);
+        else hideTopNavegationBar();
     }
-
-    public void onPause() {
+    public void hideTopNavegationBar() {
+        findViewById(R.id.manga_top).setVisibility(View.INVISIBLE);}
+    @Override
+    public void onStop() {
+        super.onStop();
         String estado = Environment.getExternalStorageState();
-
+        boolean b;
+        if(estado.equals(Environment.MEDIA_MOUNTED)) b = true; //I may have written
         for(int i = 0; i < pag.length; i++) {
-            File f = new File(""); //TODO: finalize method
-            pag[i].cancel(true);
+            (new File(getExternalFilesDir(null),i+".snp")).delete();
+            if(pag[i]!=null)pag[i].cancel(true);
         }
-        super.onPause();
     }
 
 }

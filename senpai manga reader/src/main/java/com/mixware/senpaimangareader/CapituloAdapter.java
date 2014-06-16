@@ -1,11 +1,15 @@
 package com.mixware.senpaimangareader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.DataSetObserver;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -63,9 +67,34 @@ public class CapituloAdapter implements ListAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView tv = new TextView(mContext);
+        LayoutInflater inflater = (LayoutInflater)   mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view  = inflater.inflate(R.layout.list_manga_item_view,null);
+        TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
+        final Capitulo chap = (Capitulo) this.getItem(i);
+        ImageButton ib = (ImageButton) view.findViewById(R.id.imageButton);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext,"Button1 pressed",Toast.LENGTH_LONG).show();
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mIntent = new Intent(mContext, MangaView.class);
+                mIntent.putExtra("capitulo", chap);
+                mContext.startActivity(mIntent);
+            }
+        });
+        ImageButton ib2 = (ImageButton) view.findViewById(R.id.imageButton2);
+        ib2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext,"Button2 pressed",Toast.LENGTH_LONG).show();
+            }
+        });
         tv.setText(mItems.get(i).getCapitulo());
-        return tv;
+        return view;
     }
 
     @Override
