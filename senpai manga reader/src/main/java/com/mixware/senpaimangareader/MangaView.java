@@ -29,7 +29,7 @@ import java.util.ArrayList;
  *
  * @see SystemUiHider
  */
-public class MangaView extends Activity {
+public class MangaView extends Activity implements MangaReader{
 
 
     private boolean liberados[];

@@ -50,6 +50,13 @@
             android:enabled="true"
             android:exported="true" >
         </service>
+
+        <activity
+            android:name=".OfflineViewer"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_offline_viewer"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
+        </activity>
     </application>
 
 </manifest>

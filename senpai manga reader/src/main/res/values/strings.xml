@@ -10,5 +10,6 @@
     <string name="title_activity_capitulo_list">CapituloList</string>
     <string name="title_activity_manga_view">MangaView</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_offline_viewer">OfflineViewer</string>
 
 </resources>

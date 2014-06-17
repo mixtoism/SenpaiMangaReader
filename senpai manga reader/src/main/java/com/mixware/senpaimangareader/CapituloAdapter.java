@@ -3,6 +3,7 @@ package com.mixware.senpaimangareader;
 import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -76,12 +78,26 @@ public class CapituloAdapter implements ListAdapter{
         ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
         ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
         final int nCap = i;
+
+        String path = mContext.getExternalFilesDir(null)+"/download/"+m.getNombre()+"/"+ chap.getCapitulo();
+        final File f = new File(path);
+        final boolean availableOffLine = (f.exists() && f.isDirectory());
+        if(availableOffLine)
+            btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mIntent = new Intent(mContext, MangaView.class);
-                mIntent.putExtra("capitulo", chap);
-                mContext.startActivity(mIntent);
+                if(!availableOffLine) {
+                    Intent mIntent = new Intent(mContext, MangaView.class);
+                    mIntent.putExtra("capitulo", chap);
+                    mContext.startActivity(mIntent);
+                }
+                else {
+                    Intent mIntent = new Intent(mContext,OfflineViewer.class);
+                    mIntent.putExtra("path",f);
+                }
+
             }
         });
 

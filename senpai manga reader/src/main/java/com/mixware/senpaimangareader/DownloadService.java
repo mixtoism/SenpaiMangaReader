@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.io.File;
@@ -51,7 +53,19 @@ public class DownloadService extends Service {
             downloadFile();
         }
         public void doFinish() {
-            showNotification("blah","VVS");
+            //showNotification("blah","VVS");
+            mBuilder.setProgress(0,0,false)
+                    .setContentText("Descargado");
+            Intent mIntent = new Intent(DownloadService.this,FullscreenActivity.class);
+
+
+            mIntent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            //The PendingIntent to launch our activity if the user selects this notification
+            PendingIntent contentIntent = PendingIntent.getActivity(DownloadService.this.getBaseContext(), 0,
+                    mIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+            mBuilder.setContentIntent(contentIntent);
+            mNM.notify(R.string.app_name,mBuilder.build());
             stopSelf(msg.arg1);
         }
     }
@@ -141,10 +155,15 @@ public class DownloadService extends Service {
         mNM.notify(R.string.app_name, notification);
     }
 
-
+    NotificationCompat.Builder mBuilder;
     public void showAndLoad(ArrayList<String> paginas, Bitmap imagen) {
-         enlaces = paginas;
-        writeToDisk(imagen,0);
+        enlaces = paginas;
+        mNM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this);
+        mBuilder.setContentTitle(manga.getNombre() + " " + capitulo.getCapitulo())
+                .setContentText("Descargando")
+                .setSmallIcon(R.drawable.ic_launcher);
+        writeToDisk(imagen, 0);
          getPagin = new getPagina[paginas.size()];
             getPagin[1] = new getPagina(enlaces.get(1),DownloadService.this,1);
             getPagin[1].execute("");
@@ -172,7 +191,8 @@ public class DownloadService extends Service {
                 im.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
                 fOut.flush();
                 fOut.close();
-                Log.d("Descarga","Descargadas "+(i+1) + " de "+ enlaces.size());
+                mBuilder.setProgress(enlaces.size(),i,false);
+                mNM.notify(R.string.app_name,mBuilder.build());
             } catch (IOException e) {
                 e.printStackTrace();
             }

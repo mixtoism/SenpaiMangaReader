@@ -10,8 +10,8 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class MangaPageViewAttacher extends PhotoViewAttacher {
 
-    private MangaView mangaView;
-    public MangaPageViewAttacher(ImageView imageView, final MangaView mangaView) {
+    private MangaReader mangaView;
+    public MangaPageViewAttacher(ImageView imageView, final MangaReader mangaView) {
         super(imageView);
         this.mangaView = mangaView;
         this.setOnPhotoTapListener(new OnPhotoTapListener() {
