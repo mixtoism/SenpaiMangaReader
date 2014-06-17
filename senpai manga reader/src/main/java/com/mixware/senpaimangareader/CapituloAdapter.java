@@ -18,11 +18,13 @@ import java.util.ArrayList;
  */
 public class CapituloAdapter implements ListAdapter{
     Context mContext;
+    Manga m;
     ArrayList<Capitulo> mItems;
 
-    public CapituloAdapter(Context mContext) {
+    public CapituloAdapter(Context mContext,Manga manga) {
         this.mItems = new ArrayList<Capitulo>();
         this.mContext = mContext;
+        this.m = manga;
     }
 
     @Override
@@ -71,13 +73,9 @@ public class CapituloAdapter implements ListAdapter{
         view  = inflater.inflate(R.layout.list_manga_item_view,null);
         TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
         final Capitulo chap = (Capitulo) this.getItem(i);
-        ImageButton ib = (ImageButton) view.findViewById(R.id.imageButton);
-        ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext,"Button1 pressed",Toast.LENGTH_LONG).show();
-            }
-        });
+        ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
+        ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
+        final int nCap = i;
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,8 +84,19 @@ public class CapituloAdapter implements ListAdapter{
                 mContext.startActivity(mIntent);
             }
         });
-        ImageButton ib2 = (ImageButton) view.findViewById(R.id.imageButton2);
-        ib2.setOnClickListener(new View.OnClickListener() {
+
+        btnBajar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext,"Descargando",Toast.LENGTH_LONG).show();
+                Intent mIntent = new Intent(mContext,DownloadService.class);
+                mIntent.putExtra("manga",m);
+                mIntent.putExtra("capitulo",mItems.get(nCap));
+                mContext.startService(mIntent);
+            }
+        });
+
+        btnVisto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext,"Button2 pressed",Toast.LENGTH_LONG).show();

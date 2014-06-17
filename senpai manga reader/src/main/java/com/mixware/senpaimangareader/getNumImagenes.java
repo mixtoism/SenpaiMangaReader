@@ -22,11 +22,18 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     ArrayList<String> paginas;
     Capitulo chap;
     MangaView mActivity;
+    DownloadService downloadService;
     Bitmap imagen;
     public getNumImagenes(Capitulo chap, MangaView m) {
         this.chap = chap;
         this.mActivity = m;
+        downloadService = null;
+    }
 
+    public getNumImagenes(Capitulo chap, DownloadService downloadService) {
+        this.chap = chap;
+        this.downloadService = downloadService;
+        this.mActivity = null;
     }
     @Override
     protected String doInBackground(String... strings) {
@@ -60,6 +67,7 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     @Override
     protected void onPostExecute(String s) {
         Log.i("TASK",paginas.isEmpty()?"vacio" :"no vacio");
-        mActivity.showAndLoad(paginas,imagen);
+        if(mActivity != null) mActivity.showAndLoad(paginas,imagen);
+        else if(downloadService != null) downloadService.showAndLoad(paginas,imagen);
     }
 }

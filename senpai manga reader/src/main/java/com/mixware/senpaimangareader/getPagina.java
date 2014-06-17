@@ -22,10 +22,19 @@ public class getPagina extends AsyncTask<String,String,String> {
     Bitmap imagen;
     int i;
     MangaView mActivity;
+    DownloadService mService;
     int cont;
     public getPagina(String nImagen, MangaView viewManga,int i) {
         url = nImagen;
         mActivity = viewManga;
+        mService = null;
+        this.i = i;
+        cont = 0;
+    }
+
+    public getPagina(String nImagen,DownloadService service, int i) {
+        this.url = nImagen;
+        this.mService = service;
         this.i = i;
         cont = 0;
     }
@@ -65,7 +74,8 @@ public class getPagina extends AsyncTask<String,String,String> {
     }
 
     protected void onPostExecute(String res) {
-        mActivity.nextImage(imagen,i);
+        if (mActivity != null) {mActivity.nextImage(imagen,i); }
+        else if(mService != null) { mService.nextImage(imagen,i);}
     }
 
 }
