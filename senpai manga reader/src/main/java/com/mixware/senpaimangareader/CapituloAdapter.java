@@ -83,7 +83,7 @@ public class CapituloAdapter implements ListAdapter{
         final File f = new File(path);
         final boolean availableOffLine = (f.exists() && f.isDirectory());
         if(availableOffLine)
-            btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
+            btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,11 +104,29 @@ public class CapituloAdapter implements ListAdapter{
         btnBajar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext,"Descargando",Toast.LENGTH_LONG).show();
-                Intent mIntent = new Intent(mContext,DownloadService.class);
-                mIntent.putExtra("manga",m);
-                mIntent.putExtra("capitulo",mItems.get(nCap));
-                mContext.startService(mIntent);
+                if (availableOffLine) {
+                    Toast.makeText(mContext, "Descargando", Toast.LENGTH_LONG).show();
+                    Intent mIntent = new Intent(mContext, DownloadService.class);
+                    mIntent.putExtra("manga", m);
+                    mIntent.putExtra("capitulo", mItems.get(nCap));
+                    mContext.startService(mIntent);
+                }
+                else {
+                    Toast.makeText(mContext, "Eliminando", Toast.LENGTH_LONG).show();
+                    new Thread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            File files [] = f.listFiles();
+                            for(int i = 0; i < files.length; i++) {
+                                files[i].delete();
+                            }
+                            f.delete();
+                        }
+                    }).start();
+
+
+                }
             }
         });
 

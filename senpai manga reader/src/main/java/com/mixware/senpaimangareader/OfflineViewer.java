@@ -37,6 +37,28 @@ public class OfflineViewer extends Activity implements MangaReader{
         nElemens = path.listFiles().length;
         image = (ImageView) this.findViewById(R.id.offline_manga_page);
         mAttacher = new MangaPageViewAttacher(image,this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                actual = loadFromDisk(0);
+                runOnUiThread(new Runnable() {
+                   @Override
+                   public void run() {
+                       image.setImageBitmap(actual);
+                       mAttacher.update();
+                   }
+                });
+            }
+        }).start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                siguiente = loadFromDisk(1);
+            }
+        }).start();
+
+
         mTopMenu = findViewById(R.id.manga_top);
         mTopMenu.setVisibility(View.INVISIBLE);
         mTopMenu.findViewById(R.id.backToMenu).setOnClickListener(new View.OnClickListener() {
