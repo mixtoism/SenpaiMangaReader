@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-//TODO: Adapt Class to meet my problem (Download chapters)
+
 public class DownloadService extends Service {
 
     SharedPreferences preferences;
@@ -53,11 +53,10 @@ public class DownloadService extends Service {
             downloadFile();
         }
         public void doFinish() {
-            //showNotification("blah","VVS");
             mBuilder.setProgress(0,0,false)
                     .setContentText("Descargado");
-            Intent mIntent = new Intent(DownloadService.this,FullscreenActivity.class);
-
+            Intent mIntent = new Intent(DownloadService.this,OfflineViewer.class);
+            mIntent.putExtra("path",new File(path));
 
             mIntent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //The PendingIntent to launch our activity if the user selects this notification
@@ -181,7 +180,9 @@ public class DownloadService extends Service {
 
         }
     }
+    int contador=0;
     public void writeToDisk(Bitmap im, int i){
+        contador++;
         String estado = Environment.getExternalStorageState();
         if(estado.equals(Environment.MEDIA_MOUNTED)) {
             OutputStream fOut = null;
@@ -191,7 +192,7 @@ public class DownloadService extends Service {
                 im.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
                 fOut.flush();
                 fOut.close();
-                mBuilder.setProgress(enlaces.size(),i,false);
+                mBuilder.setProgress(enlaces.size(),contador,false);
                 mNM.notify(R.string.app_name,mBuilder.build());
             } catch (IOException e) {
                 e.printStackTrace();

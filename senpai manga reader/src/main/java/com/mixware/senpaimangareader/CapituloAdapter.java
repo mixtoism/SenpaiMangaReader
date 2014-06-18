@@ -22,6 +22,7 @@ public class CapituloAdapter implements ListAdapter{
     Context mContext;
     Manga m;
     ArrayList<Capitulo> mItems;
+    public boolean availableOffLine;
 
     public CapituloAdapter(Context mContext,Manga manga) {
         this.mItems = new ArrayList<Capitulo>();
@@ -71,24 +72,25 @@ public class CapituloAdapter implements ListAdapter{
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
         LayoutInflater inflater = (LayoutInflater)   mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view  = inflater.inflate(R.layout.list_manga_item_view,null);
         TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
         final Capitulo chap = (Capitulo) this.getItem(i);
         ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
-        ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
+        final ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
         final int nCap = i;
 
         String path = mContext.getExternalFilesDir(null)+"/download/"+m.getNombre()+"/"+ chap.getCapitulo();
         final File f = new File(path);
-        final boolean availableOffLine = (f.exists() && f.isDirectory());
-        if(availableOffLine)
+        final boolean[] availableOffLine = {(f.exists() && f.isDirectory())};
+        if(availableOffLine[0])
             btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!availableOffLine) {
+                if(!availableOffLine[0]) {
                     Intent mIntent = new Intent(mContext, MangaView.class);
                     mIntent.putExtra("capitulo", chap);
                     mContext.startActivity(mIntent);
@@ -96,6 +98,7 @@ public class CapituloAdapter implements ListAdapter{
                 else {
                     Intent mIntent = new Intent(mContext,OfflineViewer.class);
                     mIntent.putExtra("path",f);
+                    mContext.startActivity(mIntent);
                 }
 
             }
@@ -104,7 +107,7 @@ public class CapituloAdapter implements ListAdapter{
         btnBajar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (availableOffLine) {
+                if (!availableOffLine[0]) {
                     Toast.makeText(mContext, "Descargando", Toast.LENGTH_LONG).show();
                     Intent mIntent = new Intent(mContext, DownloadService.class);
                     mIntent.putExtra("manga", m);
@@ -124,8 +127,8 @@ public class CapituloAdapter implements ListAdapter{
                             f.delete();
                         }
                     }).start();
-
-
+                    availableOffLine[0] = !availableOffLine[0];
+                    btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_download));
                 }
             }
         });

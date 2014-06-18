@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -31,6 +32,7 @@ public class OfflineViewer extends Activity implements MangaReader{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i("OFFLINE VIEWER","onCreate");
         setContentView(R.layout.activity_offline_viewer);
         nActual = 0;
         path = (File) getIntent().getSerializableExtra("path");
@@ -48,6 +50,7 @@ public class OfflineViewer extends Activity implements MangaReader{
                        mAttacher.update();
                    }
                 });
+                actualizarTexto();
             }
         }).start();
 
@@ -143,7 +146,7 @@ public class OfflineViewer extends Activity implements MangaReader{
 
     @Override
     public void actualizarTexto() {
-        ((TextView)(mTopMenu.findViewById(R.id.pagdepag))).setText(nActual + " de " + nElemens);
+        ((TextView)(mTopMenu.findViewById(R.id.pagdepag))).setText(nActual + " de " + (nElemens-1));
     }
 
     public Bitmap loadFromDisk(int idx) {
