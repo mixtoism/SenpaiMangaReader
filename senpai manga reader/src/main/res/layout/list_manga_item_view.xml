@@ -21,9 +21,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton"
-        android:background="#FF8800"
         android:src="@drawable/ic_action_accept"
-
+        android:background="#ffdccece"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/imageButton2"
         android:layout_marginRight="2dp" />
@@ -39,6 +38,8 @@
         android:layout_alignParentEnd="true"
 
         android:layout_alignBottom="@+id/imageButton" />
+
+
 
 
 </RelativeLayout>

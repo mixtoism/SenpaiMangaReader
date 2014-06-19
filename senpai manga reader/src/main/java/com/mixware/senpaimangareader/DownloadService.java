@@ -1,6 +1,5 @@
 package com.mixware.senpaimangareader;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -29,17 +28,17 @@ public class DownloadService extends Service {
 
     SharedPreferences preferences;
 
-    private static final String DOCUMENT_VIEW_STATE_PREFERENCES = "DjvuDocumentViewState";
-
     private Looper mServiceLooper;
     private ServiceHandler mServiceHandler;
     private NotificationManager mNM;
     public static boolean serviceState=false;
-    public ArrayList<String> enlaces;
-    public getPagina getPagin[];
-    public Manga manga;
-    public Capitulo capitulo;
-    public String path;
+    public ArrayList<String> enlaces[];
+    public getPagina getPagin[][];
+    public Manga manga[];
+    public Capitulo capitulo[];
+    public String path[];
+    private static int MaxDescargas = 4;
+
 
     // Handler that receives messages from the thread
     private final class ServiceHandler extends Handler {
@@ -47,16 +46,18 @@ public class DownloadService extends Service {
             super(looper);
         }
         Message msg;
+        int id;
         @Override
         public void handleMessage(Message msg) {
             this.msg = msg;
-            downloadFile();
+            this.id=msg.arg2;
+            downloadFile(id);
         }
         public void doFinish() {
             mBuilder.setProgress(0,0,false)
                     .setContentText("Descargado");
             Intent mIntent = new Intent(DownloadService.this,OfflineViewer.class);
-            mIntent.putExtra("path",new File(path));
+            mIntent.putExtra("path",new File(path[id]));
 
             mIntent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //The PendingIntent to launch our activity if the user selects this notification
@@ -64,7 +65,7 @@ public class DownloadService extends Service {
                     mIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             mBuilder.setContentIntent(contentIntent);
-            mNM.notify(R.string.app_name,mBuilder.build());
+            mNM.notify(id,mBuilder.build());
             stopSelf(msg.arg1);
         }
     }
@@ -84,23 +85,39 @@ public class DownloadService extends Service {
     }
 
 
-
+    int nHilos = 0;
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(final Intent intent, int flags, final int startId) {
         Log.d("SERVICE-ONCOMMAND", "onStartCommand");
+        synchronized (this) {
+            manga = new Manga[MaxDescargas];
+            capitulo = new Capitulo[MaxDescargas];
+            path = new String[MaxDescargas];
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    int idHilo;
+                    synchronized (this) {
+                        idHilo = nHilos - 1;
+                        Log.i("Nuevo",idHilo+"");
+                    }
+                    Bundle extra = intent.getExtras();
+                    if (extra != null) {
+                        manga[idHilo] = (Manga) extra.getSerializable("manga");
+                        capitulo[idHilo] = (Capitulo) extra.getSerializable("capitulo");
 
-        Bundle extra = intent.getExtras();
-        if(extra != null){
-           manga = (Manga) intent.getSerializableExtra("manga");
-           capitulo = (Capitulo) extra.getSerializable("capitulo");
-            path = getExternalFilesDir(null).toString()+"/download/"+manga.getNombre()+"/"+capitulo.getCapitulo();
+                        path[idHilo] = getExternalFilesDir(null).toString() + "/download/" + manga[idHilo].getNombre() + "/" + capitulo[idHilo].getCapitulo();
+                    }
 
+                    Message msg = mServiceHandler.obtainMessage();
+                    msg.arg1 = startId;
+                    msg.arg2 = idHilo;
+                    mServiceHandler.sendMessage(msg);
+
+                }
+            }).start();
+        nHilos++;
         }
-
-        Message msg = mServiceHandler.obtainMessage();
-        msg.arg1 = startId;
-        mServiceHandler.sendMessage(msg);
-
         // If we get killed, after returning from here, restart
         return START_STICKY;
     }
@@ -121,79 +138,56 @@ public class DownloadService extends Service {
     }
 
 
-    public void downloadFile(){
+    public void downloadFile(int id){
 
-        File root =new File(path);
+        File root =new File(path[id]);
 
         if (!root.exists() || !root.isDirectory()) root.mkdirs();
-        getNumImagenes getPag = new getNumImagenes(this.capitulo,DownloadService.this);
+        getNumImagenes getPag = new getNumImagenes(this.capitulo[id],DownloadService.this,id);
         getPag.execute("");
     }
 
 
 
-    void showNotification(String message,String title) {
-        // In this sample, we'll use the same text for the ticker and the expanded notification
-        CharSequence text = message;
-
-        // Set the icon, scrolling text and timestamp
-        Notification notification = new Notification(R.drawable.ic_launcher, "Cspitulo Descargado",
-                System.currentTimeMillis());
-        notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        Intent intent = new Intent(this, FullscreenActivity.class);
-        intent.setFlags (Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        //The PendingIntent to launch our activity if the user selects this notification
-        PendingIntent contentIntent = PendingIntent.getActivity(this.getBaseContext(), 0,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        // Set the info for the views that show in the notification panel.
-        notification.setLatestEventInfo(this, title,
-                text, contentIntent);
-        // Send the notification.
-        // We use a layout id because it is a unique number.  We use it later to cancel.
-        mNM.notify(R.string.app_name, notification);
-    }
-
     NotificationCompat.Builder mBuilder;
-    public void showAndLoad(ArrayList<String> paginas, Bitmap imagen) {
-        enlaces = paginas;
+    public void showAndLoad(ArrayList<String> paginas, Bitmap imagen,int id) {
+        enlaces[id] = paginas;
         mNM = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this);
-        mBuilder.setContentTitle(manga.getNombre() + " " + capitulo.getCapitulo())
+        mBuilder.setContentTitle(manga[id].getNombre() + " " + capitulo[id].getCapitulo())
                 .setContentText("Descargando")
                 .setSmallIcon(R.drawable.ic_launcher);
-        writeToDisk(imagen, 0);
-         getPagin = new getPagina[paginas.size()];
-            getPagin[1] = new getPagina(enlaces.get(1),DownloadService.this,1);
-            getPagin[1].execute("");
+        writeToDisk(imagen, 0,id);
+         getPagin = new getPagina[paginas.size()][MaxDescargas];
+            getPagin[1][id] = new getPagina(enlaces[id].get(1),DownloadService.this,1,id);
+            getPagin[1][id].execute("");
         }
 
-    public synchronized void nextImage(Bitmap imagen, int i) {
+    public synchronized void nextImage(Bitmap imagen, int i,int id) {
         if(imagen== null){
-            getPagina gp = new getPagina(enlaces.get(i),DownloadService.this,i);
+            getPagina gp = new getPagina(enlaces[id].get(i),DownloadService.this,i,id);
             gp.execute("");
         }
         else {
-            writeToDisk(imagen, i);
-            if(i+1<getPagin.length)(new getPagina(enlaces.get(i+1),DownloadService.this,i+1)).execute("");
+            writeToDisk(imagen, i,id);
+            if(i+1<getPagin.length)(new getPagina(enlaces[id].get(i + 1),DownloadService.this,i+1,id)).execute("");
             else mServiceHandler.doFinish();
 
         }
     }
-    int contador=0;
-    public void writeToDisk(Bitmap im, int i){
-        contador++;
+
+    public void writeToDisk(Bitmap im, int i,int id){
         String estado = Environment.getExternalStorageState();
         if(estado.equals(Environment.MEDIA_MOUNTED)) {
             OutputStream fOut = null;
-            File file = new File(path, i+".snp");
+            File file = new File(path[id], i+".snp");
             try {
                 fOut = new FileOutputStream(file);
                 im.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
                 fOut.flush();
                 fOut.close();
-                mBuilder.setProgress(enlaces.size(),contador,false);
-                mNM.notify(R.string.app_name,mBuilder.build());
+                mBuilder.setProgress(enlaces[id].size(),i,false);
+                mNM.notify(id,mBuilder.build());
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -24,16 +24,18 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     MangaView mActivity;
     DownloadService downloadService;
     Bitmap imagen;
+    int id;
     public getNumImagenes(Capitulo chap, MangaView m) {
         this.chap = chap;
         this.mActivity = m;
         downloadService = null;
     }
 
-    public getNumImagenes(Capitulo chap, DownloadService downloadService) {
+    public getNumImagenes(Capitulo chap, DownloadService downloadService,int id) {
         this.chap = chap;
         this.downloadService = downloadService;
         this.mActivity = null;
+        this.id = id;
     }
     @Override
     protected String doInBackground(String... strings) {
@@ -68,6 +70,6 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     protected void onPostExecute(String s) {
         Log.i("TASK",paginas.isEmpty()?"vacio" :"no vacio");
         if(mActivity != null) mActivity.showAndLoad(paginas,imagen);
-        else if(downloadService != null) downloadService.showAndLoad(paginas,imagen);
+        else if(downloadService != null) downloadService.showAndLoad(paginas,imagen,id);
     }
 }

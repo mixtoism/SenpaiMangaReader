@@ -77,10 +77,9 @@ public class CapituloAdapter implements ListAdapter{
         view  = inflater.inflate(R.layout.list_manga_item_view,null);
         TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
         final Capitulo chap = (Capitulo) this.getItem(i);
-        ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
+        final ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
         final ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
         final int nCap = i;
-
         String path = mContext.getExternalFilesDir(null)+"/download/"+m.getNombre()+"/"+ chap.getCapitulo();
         final File f = new File(path);
         final boolean[] availableOffLine = {(f.exists() && f.isDirectory())};

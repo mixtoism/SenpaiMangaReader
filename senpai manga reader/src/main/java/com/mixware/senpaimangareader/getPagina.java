@@ -31,12 +31,13 @@ public class getPagina extends AsyncTask<String,String,String> {
         this.i = i;
         cont = 0;
     }
-
-    public getPagina(String nImagen,DownloadService service, int i) {
+    int id;
+    public getPagina(String nImagen,DownloadService service, int i,int id) {
         this.url = nImagen;
         this.mService = service;
         this.i = i;
         cont = 0;
+        this.id = id;
     }
 
     @Override
@@ -75,7 +76,7 @@ public class getPagina extends AsyncTask<String,String,String> {
 
     protected void onPostExecute(String res) {
         if (mActivity != null) {mActivity.nextImage(imagen,i); }
-        else if(mService != null) { mService.nextImage(imagen,i);}
+        else if(mService != null) { mService.nextImage(imagen,i,id);}
     }
 
 }
