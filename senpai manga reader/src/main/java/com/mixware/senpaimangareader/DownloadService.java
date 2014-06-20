@@ -63,23 +63,23 @@ public class DownloadService extends Service {
                     mIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
             mBuilder.setContentIntent(contentIntent);
-            mNM.notify(R.string.app_name,mBuilder.build());
+            mNM.notify(capitulo.hashCode(),mBuilder.build());
             if(!waiting) {
                 running = false;
                 stopSelf(msg.arg1);
             }
-            else running = false;
+            else {
+                running = false;
+                contador = 0;
+                comenzar(colaIntent.remove(0),colaFlags.remove(0),colaStartId.remove(0));
+            }
         }
     }
 
-    boolean running=false;
+    Boolean running;
     boolean waiting;
     @Override
     public void onCreate() {
-        if(running){waiting=true;} //Espera activa malo
-        while(running);
-        running = true;
-        waiting = false;
         serviceState=true;
         mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         HandlerThread thread = new HandlerThread("ServiceStartArguments",1);
@@ -92,15 +92,17 @@ public class DownloadService extends Service {
     }
 
 
+    ArrayList<Intent> colaIntent = new ArrayList<Intent>();
+    ArrayList<Integer> colaFlags = new ArrayList<Integer>();
+    ArrayList<Integer> colaStartId = new ArrayList<Integer>();
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("SERVICE-ONCOMMAND", "onStartCommand");
+    public void comenzar(Intent intent,int flags,int startId) {
+        running = true;
 
         Bundle extra = intent.getExtras();
         if(extra != null){
-           manga = (Manga) intent.getSerializableExtra("manga");
-           capitulo = (Capitulo) extra.getSerializable("capitulo");
+            manga = (Manga) intent.getSerializableExtra("manga");
+            capitulo = (Capitulo) extra.getSerializable("capitulo");
             path = getExternalFilesDir(null).toString()+"/download/"+manga.getNombre()+"/"+capitulo.getCapitulo();
 
         }
@@ -108,6 +110,29 @@ public class DownloadService extends Service {
         Message msg = mServiceHandler.obtainMessage();
         msg.arg1 = startId;
         mServiceHandler.sendMessage(msg);
+
+    }
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("SERVICE-ONCOMMAND", "onStartCommand");
+        if(running != null)
+        {
+            if(running) {
+                NotificationCompat.Builder  mBuilder2 = new NotificationCompat.Builder(this);
+                mBuilder2.setContentTitle(((Manga) intent.getSerializableExtra("manga")).getNombre() +
+                        ((Capitulo) intent.getSerializableExtra("capitulo")).getCapitulo())
+                        .setContentText("En cola")
+                        .setSmallIcon(R.drawable.ic_launcher);
+                mNM.notify(((Capitulo) intent.getSerializableExtra("capitulo")).hashCode(),mBuilder2.build());
+                waiting = true;
+                colaIntent.add(intent);
+                colaFlags.add(flags);
+                colaStartId.add(startId);
+                return START_STICKY;
+            }
+        } //Espera activa malo
+
+        comenzar(intent,flags,startId);
 
         // If we get killed, after returning from here, restart
         return START_STICKY;
@@ -176,7 +201,7 @@ public class DownloadService extends Service {
                 fOut.flush();
                 fOut.close();
                 mBuilder.setProgress(enlaces.size(),contador,false);
-                mNM.notify(R.string.app_name,mBuilder.build());
+                mNM.notify(capitulo.hashCode(),mBuilder.build());
             } catch (IOException e) {
                 e.printStackTrace();
             }
