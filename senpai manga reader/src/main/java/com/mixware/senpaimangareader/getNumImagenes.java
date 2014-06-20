@@ -31,7 +31,7 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
         downloadService = null;
     }
 
-    public getNumImagenes(Capitulo chap, DownloadService downloadService,int id) {
+    public getNumImagenes(Capitulo chap, DownloadService downloadService) {
         this.chap = chap;
         this.downloadService = downloadService;
         this.mActivity = null;
@@ -70,6 +70,6 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     protected void onPostExecute(String s) {
         Log.i("TASK",paginas.isEmpty()?"vacio" :"no vacio");
         if(mActivity != null) mActivity.showAndLoad(paginas,imagen);
-        else if(downloadService != null) downloadService.showAndLoad(paginas,imagen,id);
+        else if(downloadService != null) downloadService.showAndLoad(paginas,imagen);
     }
 }
