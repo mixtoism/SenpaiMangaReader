@@ -48,9 +48,10 @@ public class OfflineViewer extends Activity implements MangaReader{
                    public void run() {
                        image.setImageBitmap(actual);
                        mAttacher.update();
+                       actualizarTexto();
                    }
                 });
-                actualizarTexto();
+
             }
         }).start();
 

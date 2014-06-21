@@ -13,6 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 /**
@@ -71,11 +76,11 @@ public class CapituloAdapter implements ListAdapter{
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
 
         LayoutInflater inflater = (LayoutInflater)   mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view  = inflater.inflate(R.layout.list_manga_item_view,null);
-        TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
+        final TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
         final Capitulo chap = (Capitulo) this.getItem(i);
         final ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
         final ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
@@ -86,58 +91,103 @@ public class CapituloAdapter implements ListAdapter{
         if(availableOffLine[0])
             btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!availableOffLine[0]) {
-                    Intent mIntent = new Intent(mContext, MangaView.class);
-                    mIntent.putExtra("capitulo", chap);
-                    mContext.startActivity(mIntent);
-                }
-                else {
-                    Intent mIntent = new Intent(mContext,OfflineViewer.class);
-                    mIntent.putExtra("path",f);
-                    mContext.startActivity(mIntent);
-                }
-
-            }
+        final View finalView = view;
+        finalView.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                   if (!availableOffLine[0]) {
+                       Intent mIntent = new Intent(mContext, MangaView.class);
+                       mIntent.putExtra("capitulo", chap);
+                       mContext.startActivity(mIntent);
+                   } else {
+                       new Thread(new Runnable() {
+                           @Override
+                           public void run() {
+                               Intent mIntent = new Intent(mContext, OfflineViewer.class);
+                               mIntent.putExtra("path", f);
+                               mContext.startActivity(mIntent);
+                           }
+                       }).start();
+                   }
+               }
         });
 
         btnBajar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!availableOffLine[0]) {
-                    Toast.makeText(mContext, "Descargando", Toast.LENGTH_LONG).show();
-                    Intent mIntent = new Intent(mContext, DownloadService.class);
-                    mIntent.putExtra("manga", m);
-                    mIntent.putExtra("capitulo", mItems.get(nCap));
-                    mContext.startService(mIntent);
-                }
-                else {
-                    Toast.makeText(mContext, "Eliminando", Toast.LENGTH_LONG).show();
-                    new Thread(new Runnable() {
+           @Override
+           public void onClick(View view) {
+              if (!availableOffLine[0]) {
+                  Toast.makeText(mContext, "Descargando", Toast.LENGTH_LONG).show();
+                  Intent mIntent = new Intent(mContext, DownloadService.class);
+                  mIntent.putExtra("manga", m);
+                  mIntent.putExtra("capitulo", mItems.get(nCap));
+                  mContext.startService(mIntent);
+             } else {
+                     Toast.makeText(mContext, "Eliminando", Toast.LENGTH_LONG).show();
+                     new Thread(new Runnable() {
 
-                        @Override
-                        public void run() {
-                            File files [] = f.listFiles();
-                            for(int i = 0; i < files.length; i++) {
-                                files[i].delete();
-                            }
-                            f.delete();
+                                @Override
+                                public void run() {
+                               File files[] = f.listFiles();
+                               for (int i = 0; i < files.length; i++) {
+                                  files[i].delete();
+                               }
+                               f.delete();
+                       }
+                     }).start();
+                     availableOffLine[0] = !availableOffLine[0];
+                       btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
+                  }
+               }
+           });
+
+           btnVisto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    final String path = mContext.getExternalFilesDir(null)+"/"+m.getNombre()+".dat";
+                    final File f = new File(path);
+                    if(!f.exists()){
+                        try {
+                            f.createNewFile();
+                            FileOutputStream fos = new FileOutputStream(f);
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            ArrayList<Capitulo> list = new ArrayList<Capitulo>();
+                            list.add(mItems.get(i));
+                            oos.writeObject(list);
+                            btnVisto.setBackgroundColor(0xFF8800);
+                            oos.close();
+                            fos.close();
+                            return;
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    }).start();
-                    availableOffLine[0] = !availableOffLine[0];
-                    btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_download));
-                }
-            }
-        });
+                    }
+                     try {
+                         FileInputStream fis = null;
+                         fis = new FileInputStream(f);
 
-        btnVisto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext,"Button2 pressed",Toast.LENGTH_LONG).show();
-            }
-        });
+                         ObjectInputStream ois = new ObjectInputStream(fis);
+                         ArrayList<Capitulo> list = (ArrayList<Capitulo>) ois.readObject();
+                         ois.close();
+                         fis.close();
+                         if(list.contains(mItems.get(i))){
+                            list.remove(mItems.get(i));
+                            btnVisto.setBackgroundColor(0xfccece);
+                         }
+                         else {
+                            FileOutputStream fos = new FileOutputStream(f);
+                            ObjectOutputStream oos = new ObjectOutputStream(fos);
+                            list.add(mItems.get(i));
+                            oos.writeObject(list);
+                             oos.close();
+                             fos.close();
+                            btnVisto.setBackgroundColor(0xFF8800);
+                         }
+                    } catch (Exception e) {
+                         e.printStackTrace();
+                     }
+                }
+           });
+
         tv.setText(mItems.get(i).getCapitulo());
         return view;
     }

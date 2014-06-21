@@ -15,6 +15,7 @@ import java.io.Serializable;
 public class Capitulo implements Serializable {
     private String enlace;
     private String Capitulo;
+    private boolean readed;
 
     public String getEnlace() {
         return enlace;
@@ -42,5 +43,12 @@ public class Capitulo implements Serializable {
         String enlac [] = enlace.split("/");
         this.Capitulo = "Capítulo " + (enlac[enlac.length-1]);
     }
-    
+
+    public void setReaded(boolean readed) {
+        this.readed = readed;
+    }
+
+    public boolean isReaded() {
+        return readed;
+    }
 }

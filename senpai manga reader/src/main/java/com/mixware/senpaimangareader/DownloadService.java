@@ -61,10 +61,10 @@ public class DownloadService extends Service {
             //The PendingIntent to launch our activity if the user selects this notification
             PendingIntent contentIntent = PendingIntent.getActivity(DownloadService.this.getBaseContext(), 0,
                     mIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-
+            mBuilder.setAutoCancel(true);
             mBuilder.setContentIntent(contentIntent);
             mNM.notify(capitulo.hashCode(),mBuilder.build());
-            if(!waiting) {
+            if(colaIntent.size()>0) {
                 running = false;
                 stopSelf(msg.arg1);
             }
@@ -124,7 +124,7 @@ public class DownloadService extends Service {
                         .setContentText("En cola")
                         .setSmallIcon(R.drawable.ic_launcher);
                 mNM.notify(((Capitulo) intent.getSerializableExtra("capitulo")).hashCode(),mBuilder2.build());
-                waiting = true;
+
                 colaIntent.add(intent);
                 colaFlags.add(flags);
                 colaStartId.add(startId);
