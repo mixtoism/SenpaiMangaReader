@@ -27,12 +27,39 @@ public class CapituloAdapter implements ListAdapter{
     Context mContext;
     Manga m;
     ArrayList<Capitulo> mItems;
+    ArrayList<Capitulo> readed = new ArrayList<Capitulo>();
     public boolean availableOffLine;
+    String path;
 
     public CapituloAdapter(Context mContext,Manga manga) {
         this.mItems = new ArrayList<Capitulo>();
         this.mContext = mContext;
         this.m = manga;
+        path = mContext.getExternalFilesDir(null)+ "/" + m.getNombre()+".data";
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                File f = new File(path);
+                try {
+                    f.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(f.exists()) {
+                    try {
+                        FileInputStream fis = new FileInputStream(f);
+                        ObjectInputStream ois = new ObjectInputStream(fis);
+                        ArrayList<Capitulo> readed2 = (ArrayList<Capitulo>) ois.readObject();
+                        if(readed2 == null);
+                        else readed = readed2;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
+
     }
 
     @Override
@@ -83,18 +110,21 @@ public class CapituloAdapter implements ListAdapter{
         final TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
         final Capitulo chap = (Capitulo) this.getItem(i);
         final ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
+
         final ImageButton btnBajar = (ImageButton) view.findViewById(R.id.imageButton2);
         final int nCap = i;
+
         String path = mContext.getExternalFilesDir(null)+"/download/"+m.getNombre()+"/"+ chap.getCapitulo();
         final File f = new File(path);
         final boolean[] availableOffLine = {(f.exists() && f.isDirectory())};
         if(availableOffLine[0])
             btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
-
+        btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), chap.isReaded() ? R.drawable.ic_action_accept_marked : R.drawable.ic_action_accept));
         final View finalView = view;
         finalView.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View view) {
+                   chap.setReaded(true);
                    if (!availableOffLine[0]) {
                        Intent mIntent = new Intent(mContext, MangaView.class);
                        mIntent.putExtra("capitulo", chap);
@@ -135,60 +165,29 @@ public class CapituloAdapter implements ListAdapter{
                        }
                      }).start();
                      availableOffLine[0] = !availableOffLine[0];
-                       btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
+                      btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
                   }
                }
            });
 
-           btnVisto.setOnClickListener(new View.OnClickListener() {
+            btnVisto.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    final String path = mContext.getExternalFilesDir(null)+"/"+m.getNombre()+".dat";
-                    final File f = new File(path);
-                    if(!f.exists()){
-                        try {
-                            f.createNewFile();
-                            FileOutputStream fos = new FileOutputStream(f);
-                            ObjectOutputStream oos = new ObjectOutputStream(fos);
-                            ArrayList<Capitulo> list = new ArrayList<Capitulo>();
-                            list.add(mItems.get(i));
-                            oos.writeObject(list);
-                            btnVisto.setBackgroundColor(0xFF8800);
-                            oos.close();
-                            fos.close();
-                            return;
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                     try {
-                         FileInputStream fis = null;
-                         fis = new FileInputStream(f);
+                if(chap.isReaded()){
+                     chap.setReaded(false);
+                     readed.remove(chap);
+                     btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_accept));
+                 }
+                 else {
+                     chap.setReaded(true);
+                     readed.add(chap);
+                     btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_accept_marked));
 
-                         ObjectInputStream ois = new ObjectInputStream(fis);
-                         ArrayList<Capitulo> list = (ArrayList<Capitulo>) ois.readObject();
-                         ois.close();
-                         fis.close();
-                         if(list.contains(mItems.get(i))){
-                            list.remove(mItems.get(i));
-                            btnVisto.setBackgroundColor(0xfccece);
-                         }
-                         else {
-                            FileOutputStream fos = new FileOutputStream(f);
-                            ObjectOutputStream oos = new ObjectOutputStream(fos);
-                            list.add(mItems.get(i));
-                            oos.writeObject(list);
-                             oos.close();
-                             fos.close();
-                            btnVisto.setBackgroundColor(0xFF8800);
-                         }
-                    } catch (Exception e) {
-                         e.printStackTrace();
-                     }
+                 }
                 }
-           });
+            });
 
-        tv.setText(mItems.get(i).getCapitulo());
+        tv.setText(chap.getCapitulo());
         return view;
     }
 
@@ -208,6 +207,25 @@ public class CapituloAdapter implements ListAdapter{
     }
 
     public boolean addAll(ArrayList<Capitulo> aL) {
-       return this.mItems.addAll(aL);
+       for(Capitulo c: aL) {
+           if (readed.contains(c)) {
+               c.setReaded(true);
+           }
+           mItems.add(c);
+       }
+
+        return this.mItems.addAll(aL);
+    }
+
+    public void writeReaded() {
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(new File((path)));
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(readed);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }

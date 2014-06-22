@@ -18,9 +18,10 @@ public class CapituloList extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_capitulo_list);
         m = (Manga) this.getIntent().getSerializableExtra("manga");
         mAdapter = new CapituloAdapter(this,m);
+
+        setContentView(R.layout.activity_capitulo_list);
         this.setTitle(m.getNombre());
         task = new getPaginasCapitulos(this,m);
         task.execute("");
@@ -60,5 +61,16 @@ public class CapituloList extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onStop(){
+        super.onStop();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.writeReaded();
+            }
+        }).start();
+
     }
 }
