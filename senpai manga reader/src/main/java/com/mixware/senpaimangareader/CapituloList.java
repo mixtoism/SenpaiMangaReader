@@ -26,10 +26,12 @@ public class CapituloList extends ActionBarActivity {
         task = new getPaginasCapitulos(this,m);
         task.execute("");
         lv = (ListView) findViewById(R.id.listChap);
+
     }
 
 
     public void CogerCapitulos(ArrayList<String> paginas) {
+        if(paginas == null || paginas.isEmpty()) new getPaginasCapitulos(this,m).execute("");
         for(String s : paginas) {
             getCapitulos caps = new getCapitulos(this,s);
             caps.execute();
@@ -57,14 +59,14 @@ public class CapituloList extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id ==  R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public void onStop(){
-        super.onStop();
+    public void onPause(){
+        super.onPause();
         new Thread(new Runnable() {
             @Override
             public void run() {

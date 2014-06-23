@@ -22,13 +22,13 @@ import java.util.ArrayList;
 
 /**
  * Created by pargon on 08/06/2014.
+ * NOTE: Ultra patched version. Not sure how it works but it does
  */
 public class CapituloAdapter implements ListAdapter{
     Context mContext;
     Manga m;
     ArrayList<Capitulo> mItems;
     ArrayList<Capitulo> readed = new ArrayList<Capitulo>();
-    public boolean availableOffLine;
     String path;
 
     public CapituloAdapter(Context mContext,Manga manga) {
@@ -106,7 +106,7 @@ public class CapituloAdapter implements ListAdapter{
     public View getView(final int i, View view, ViewGroup viewGroup) {
 
         LayoutInflater inflater = (LayoutInflater)   mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        view  = inflater.inflate(R.layout.list_manga_item_view,null);
+        view  = inflater.inflate(R.layout.list_capitulo_item_view,null);
         final TextView tv = (TextView) view.findViewById(R.id.nombre_manga);
         final Capitulo chap = (Capitulo) this.getItem(i);
         final ImageButton btnVisto = (ImageButton) view.findViewById(R.id.imageButton);
@@ -124,7 +124,12 @@ public class CapituloAdapter implements ListAdapter{
         finalView.setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View view) {
-                   chap.setReaded(true);
+                   if(!chap.isReaded()) {
+                       chap.setReaded(true);
+                       readed.add(chap);
+                       btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_accept_marked));
+                   }
+
                    if (!availableOffLine[0]) {
                        Intent mIntent = new Intent(mContext, MangaView.class);
                        mIntent.putExtra("capitulo", chap);
@@ -165,7 +170,7 @@ public class CapituloAdapter implements ListAdapter{
                        }
                      }).start();
                      availableOffLine[0] = !availableOffLine[0];
-                      btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
+                     btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
                   }
                }
            });
@@ -206,15 +211,19 @@ public class CapituloAdapter implements ListAdapter{
         return mItems.isEmpty();
     }
 
+    /**
+     *
+     * @param aL Capitulos a añadir
+     * @return true if it could, false, otherwise
+     * @version 2
+     */
     public boolean addAll(ArrayList<Capitulo> aL) {
        for(Capitulo c: aL) {
            if (readed.contains(c)) {
                c.setReaded(true);
            }
-           mItems.add(c);
        }
-
-        return this.mItems.addAll(aL);
+       return this.mItems.addAll(aL);
     }
 
     public void writeReaded() {
