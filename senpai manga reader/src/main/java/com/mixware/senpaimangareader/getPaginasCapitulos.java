@@ -28,9 +28,10 @@ public class getPaginasCapitulos extends AsyncTask<String,String,String> {
     @Override
     protected String doInBackground(String... strings) {
      try{
+         pags_cap = new ArrayList<String>();
+
         if(font == 0) {
             int num_pags = 1;
-            pags_cap = new ArrayList<String>();
             String s_previo = "";
             String s = "";
             Document doc = Jsoup.connect(m.getEnlace()).get();

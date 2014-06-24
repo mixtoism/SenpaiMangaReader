@@ -24,6 +24,8 @@ public class getPagina extends AsyncTask<String,String,String> {
     MangaView mActivity;
     DownloadService mService;
     int cont;
+    public static final String USER_AGENT = getMangas.USER_AGENT;
+    public static final int font = getMangas.font;
     public getPagina(String nImagen, MangaView viewManga,int i) {
         url = nImagen;
         mActivity = viewManga;
@@ -44,9 +46,10 @@ public class getPagina extends AsyncTask<String,String,String> {
     protected String doInBackground(String... strings) {
         Document doc;
         try {
-            doc = Jsoup.connect(url).get();
-            Element element = doc.getElementsByTag("img").first();
-            String img = element.toString().split("src=\"")[1].split("\"")[0];
+            doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
+            Element element = doc.getElementsByTag("img").get(font == 0 ? 0 : 1);
+            String img = (font == 0 ? "":"http://esmanga.com/" ) + element.toString().split("src=\"")[1].split("\"")[0];
+
             URL imageUrl = null;
             HttpURLConnection conn = null;
             imageUrl = new URL(img);

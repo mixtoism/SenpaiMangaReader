@@ -29,11 +29,12 @@ public class getCapitulos extends AsyncTask<String,String,String>{
     @Override
     protected String doInBackground(String... strings) {
         try {
+            mChaps = new ArrayList<Capitulo>();
             /**
              * Font 0 is ESMangaOnline, ahora está caída
              */
             if(font == 0) {
-                mChaps = new ArrayList<Capitulo>();
+
 
                 Document doc = Jsoup.connect(url).get();
                 Elements elements = doc.getElementsByClass("con");
@@ -50,8 +51,6 @@ public class getCapitulos extends AsyncTask<String,String,String>{
                 }
             }
             else {
-                ArrayList<Capitulo> aL = new ArrayList<Capitulo>();
-
                 Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
                 Element el = doc.getElementById("capitulos");
                 Elements e = el.getElementsByTag("a");
@@ -59,7 +58,7 @@ public class getCapitulos extends AsyncTask<String,String,String>{
                 while(iterator.hasNext()) {
                     el = iterator.next();
                     String href = el.toString().split("href=\"")[1].split("\"")[0];
-                    String nombre ="Capítulo" + href.split("/c")[1].split("\"")[0];
+                    String nombre ="Capítulo " + href.split("/c")[1].split("\"")[0].split("/")[0];
                     href = "http://esmanga.com/" + href;
                     mChaps.add(new Capitulo(href,nombre));
                     iterator.next();

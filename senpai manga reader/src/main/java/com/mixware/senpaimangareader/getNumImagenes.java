@@ -43,8 +43,9 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     protected String doInBackground(String... strings) {
         paginas = new ArrayList<String>();
         try {
+            Document doc;
             if(font == 0) {
-                Document doc = Jsoup.connect(chap.getEnlace()).get();
+                doc = Jsoup.connect(chap.getEnlace()).get();
                 Elements elements = doc.getElementsByClass("controls");
                 for (Element el : elements) {
                     Elements melements = el.getElementsByTag("a");
@@ -54,23 +55,25 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
                         paginas.add(s);
                     }
                 }
-                Element element = doc.getElementsByTag("img").first();
-                String img = element.toString().split("src=\"")[1].split("\"")[0];
-                URL imageUrl = null;
-                HttpURLConnection conn = null;
-                imageUrl = new URL(img);
-                conn = (HttpURLConnection) imageUrl.openConnection();
-                conn.connect();
-                imagen = BitmapFactory.decodeStream(conn.getInputStream());
             }
             else {
-                    Document doc = Jsoup.connect(chap.getEnlace()).userAgent(USER_AGENT).get();
-                    Elements el = doc.getElementsByClass("tools-view");
-                    int n_pags = el.last().getElementsByTag("select").last().getElementsByTag("option").size();
-                    for(int i = 0; i < n_pags; i++) {
-                        paginas.add(chap.getEnlace()+(i+1)+".html");
-                    }
+                doc = Jsoup.connect(chap.getEnlace()).userAgent(USER_AGENT).get();
+                Elements el = doc.getElementsByClass("tools-view");
+                int n_pags = el.last().getElementsByTag("select").last().getElementsByTag("option").size();
+                for(int i = 0; i < n_pags; i++) {
+                    paginas.add(chap.getEnlace()+(i+1)+".html");
+                }
             }
+            Element element = doc.getElementsByTag("img").get(font == 0 ? 0 : 1);
+            String img = (font == 0 ? "":"http://esmanga.com/" )+ element.toString().split("src=\"")[1].split("\"")[0];
+            URL imageUrl = null;
+            HttpURLConnection conn = null;
+            imageUrl = new URL(img);
+            conn = (HttpURLConnection) imageUrl.openConnection();
+            conn.connect();
+            imagen = BitmapFactory.decodeStream(conn.getInputStream());
+
+
         } catch (IOException ex) {
             Log.i("getNumImagenes TASK", "OCURRIO ALGUN ERROR"+ex.toString());
             doInBackground("");

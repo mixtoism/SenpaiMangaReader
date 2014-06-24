@@ -61,39 +61,36 @@ public class getMangas extends AsyncTask<String,String,String> {
                     oos.writeObject(mangas);
                 }
                 else {
-                   ArrayList<Manga> mangas = new ArrayList<Manga>();
-
-                   for(int index = 0; index < 1; index++) {
-                       Document doc = Jsoup.connect(url[1]).userAgent(USER_AGENT).get();
-                       Element el = doc.getElementsByClass("pagination").first();
-                       el = el.getElementsByTag("ul").first();
-                       Elements e = el.getElementsByTag("a");
-                       el = e.get(e.size()-2);
-                       int n_pags = Integer.parseInt(el.toString().split("pag/")[1].split("\"")[0]);
-                       for(int j = 1; j <= n_pags; j++) {
-                           doc = Jsoup.connect(url+"/pag/"+j).userAgent(USER_AGENT).get();
-                           el = doc.getElementById("barra-principal");
-                           el = el.getElementsByClass("row").first();
-                           el = el.getElementsByTag("div").first();
-                           e = el.getElementsByTag("a");
-                           for(Element mElement : e) {
-                               String s = mElement.toString();
-                               String href = s.split("a href=\"")[1].split("\"")[0];
-                               String titulo = s.split("title=\"")[1].split("\"")[0];
-                               mangas.add(new Manga("http://esmanga.com/" + href,titulo));
-                           }
+                   Document doc = Jsoup.connect(url[1]).userAgent(USER_AGENT).get();
+                   Element el = doc.getElementsByClass("pagination").first();
+                   el = el.getElementsByTag("ul").first();
+                   Elements e = el.getElementsByTag("a");
+                   el = e.get(e.size()-2);
+                   int n_pags = Integer.parseInt(el.toString().split("pag/")[1].split("\"")[0]);
+                   for(int j = 1; j <= n_pags; j++) {
+                       doc = Jsoup.connect(url[1]+"/pag/"+j).userAgent(USER_AGENT).get();
+                       el = doc.getElementById("barra-principal");
+                       el = el.getElementsByClass("row").first();
+                       el = el.getElementsByTag("div").first();
+                       e = el.getElementsByTag("a");
+                       for(Element mElement : e) {
+                           String s = mElement.toString();
+                           String href = s.split("a href=\"")[1].split("\"")[0];
+                           String titulo = s.split("title=\"")[1].split("\"")[0];
+                           mangas.add(new Manga("http://esmanga.com/" + href,titulo));
                        }
-
-                       Collections.sort(mangas,new CompareMangas());
                    }
+                   Collections.sort(mangas,new CompareMangas());
                 }
-            }//Hasta aqui, la obtencion del listado de mangas, Task 1
+            }
+            //Hasta aqui, la obtencion del listado de mangas, Task 1
         } catch (IOException ex) {
             mangas = null;
-            Log.i("getMangas TASK","ERROR DOWNLOADING");
-            doInBackground("");
+             Log.i("getMangas TASK","ERROR DOWNLOADING");
+             doInBackground("");
         }
-        return null;    }
+        return null;
+    }
 
     @Override
     protected void onPostExecute(String res) {
