@@ -64,7 +64,7 @@ public class DownloadService extends Service {
             mBuilder.setAutoCancel(true);
             mBuilder.setContentIntent(contentIntent);
             mNM.notify(capitulo.hashCode(),mBuilder.build());
-            if(colaIntent.size()>=0) {
+            if(colaIntent.size() == 0) {
                 running = false;
                 stopSelf(msg.arg1);
             }
@@ -130,7 +130,7 @@ public class DownloadService extends Service {
                 colaStartId.add(startId);
                 return START_STICKY;
             }
-        } //Espera activa malo
+        }
 
         comenzar(intent,flags,startId);
 
