@@ -10,7 +10,11 @@
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
 
-
+    <item android:id="@+id/actualizar"
+        android:icon="@drawable/ic_action_refresh"
+        android:title="Actualizar"
+        app:showAsAction="ifRoom"
+      />
     <item android:id="@+id/action_settings"
         android:title="@string/action_settings"
     android:orderInCategory="100"

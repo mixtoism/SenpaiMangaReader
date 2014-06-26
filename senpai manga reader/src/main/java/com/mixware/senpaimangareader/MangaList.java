@@ -1,28 +1,19 @@
 package com.mixware.senpaimangareader;
 
-import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import android.app.ListActivity;
-import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import java.io.File;
 import java.util.ArrayList;
-
-import static android.view.View.OnTouchListener;
 
 
 public class MangaList extends ActionBarActivity {
@@ -60,6 +51,7 @@ public class MangaList extends ActionBarActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.manga_list, menu);
         MenuItem searchItem = menu.findItem(R.id.action_search);
+        MenuItem refresh = menu.findItem(R.id.actualizar);
         SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -85,6 +77,13 @@ public class MangaList extends ActionBarActivity {
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
+        }
+        else if(id == R.id.actualizar) {
+            File f = new File(getExternalFilesDir(null)+"/mangas.dat");
+            f.delete();
+            int x=0;
+            Intent mIntent = new Intent(MangaList.this,FullscreenActivity.class);
+            startActivity(mIntent);
         }
         return super.onOptionsItemSelected(item);
     }

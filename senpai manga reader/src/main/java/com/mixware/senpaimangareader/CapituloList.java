@@ -73,6 +73,18 @@ public class CapituloList extends ActionBarActivity {
                 mAdapter.writeReaded();
             }
         }).start();
+    }
 
+    /**
+     * Le pasa los capitulos offline al adapter
+     * @param nCaps chapter, only his name
+     */
+    public void CogerCapitulosOffline(ArrayList<String> nCaps) {
+        ArrayList<Capitulo> mCaps = new ArrayList<Capitulo>();
+        for(String s : nCaps) {
+            mCaps.add(new Capitulo(null,s));
+        }
+        mAdapter.addAll(mCaps);
+        lv.setAdapter(mAdapter);
     }
 }

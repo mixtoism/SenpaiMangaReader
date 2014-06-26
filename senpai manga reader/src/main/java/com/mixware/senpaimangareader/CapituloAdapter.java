@@ -157,23 +157,29 @@ public class CapituloAdapter implements ListAdapter{
                   mIntent.putExtra("capitulo", mItems.get(nCap));
                   mContext.startService(mIntent);
              } else {
-                     Toast.makeText(mContext, "Eliminando", Toast.LENGTH_LONG).show();
-                     new Thread(new Runnable() {
-
-                                @Override
-                                public void run() {
-                               File files[] = f.listFiles();
-                               for (int i = 0; i < files.length; i++) {
-                                  files[i].delete();
-                               }
-                               f.delete();
-                       }
-                     }).start();
-                     availableOffLine[0] = !availableOffLine[0];
-                     btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
+                  if(Utilidades.checkInternetConnection(mContext)== Utilidades.TYPE_NOCONNECTION) {
+                      Toast.makeText(mContext,"No puedes eliminar capitulos si no estás conectado",Toast.LENGTH_LONG).show();
+                      //btnBajar.setClickable(false);
                   }
-               }
-           });
+                  else {
+                  Toast.makeText(mContext, "Eliminando", Toast.LENGTH_LONG).show();
+                  new Thread(new Runnable() {
+                       @Override
+                       public void run() {
+                           File files[] = f.listFiles();
+                           for (int i = 0; i < files.length; i++) {
+                              files[i].delete();
+                           }
+                           f.delete();
+                   }
+                  }).start();
+
+                  availableOffLine[0] = !availableOffLine[0];
+                  btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
+                  }
+              }
+         }
+     });
 
             btnVisto.setOnClickListener(new View.OnClickListener() {
                 @Override

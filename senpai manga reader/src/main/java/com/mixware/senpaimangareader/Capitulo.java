@@ -56,6 +56,6 @@ public class Capitulo implements Serializable {
     public boolean equals(Object o) {
         Capitulo c;
        c =  o instanceof Capitulo ? ((Capitulo) o) : null;
-      return  c!= null && c.enlace.equals(this.enlace) && c.Capitulo.equals(this.Capitulo);
+      return  c!= null /*&& c.enlace.equals(this.enlace)*/ && c.Capitulo.equals(this.Capitulo);
     }
 }
