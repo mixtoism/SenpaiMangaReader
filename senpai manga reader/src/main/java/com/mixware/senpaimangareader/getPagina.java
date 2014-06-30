@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
+ * AsyncTask for fetching the image from the web page
  * Created by pargon on 08/06/2014.
  */
 public class getPagina extends AsyncTask<String,String,String> {
@@ -23,23 +24,21 @@ public class getPagina extends AsyncTask<String,String,String> {
     int i;
     MangaView mActivity;
     DownloadService mService;
-    int cont;
+
     public static final String USER_AGENT = getMangas.USER_AGENT;
     public static final int font = getMangas.font;
-    public getPagina(String nImagen, MangaView viewManga,int i) {
+    public getPagina(String nImagen, MangaView viewManga, int i) {
         url = nImagen;
         mActivity = viewManga;
         mService = null;
         this.i = i;
-        cont = 0;
     }
 
     public getPagina(String nImagen,DownloadService service, int i) {
         this.url = nImagen;
         this.mService = service;
+        mActivity = null;
         this.i = i;
-        cont = 0;
-
     }
 
     @Override
@@ -50,27 +49,24 @@ public class getPagina extends AsyncTask<String,String,String> {
             Element element = doc.getElementsByTag("img").get(font == 0 ? 0 : 1);
             String img = (font == 0 ? "":"http://esmanga.com/" ) + element.toString().split("src=\"")[1].split("\"")[0];
 
-            URL imageUrl = null;
-            HttpURLConnection conn = null;
+            URL imageUrl;
+            HttpURLConnection conn;
             imageUrl = new URL(img);
             conn = (HttpURLConnection) imageUrl.openConnection();
             conn.connect();
             loadImage(conn.getInputStream());
-
         } catch (IOException e) {
-            cont++;
-            Log.i("getPagina TASK", "OCURRIO ALGUN ERROR con el hilo" + this.i + "Reintentando...");
-            if(cont<4)doInBackground("");
+
         }
     return "";
     }
-    private void loadImage(InputStream inputStream) throws OutOfMemoryError{
+
+    private void loadImage(InputStream inputStream){
         try {
             imagen = BitmapFactory.decodeStream(inputStream);
         } catch (OutOfMemoryError e) {
-            Log.i("IMAGEIO:", e.toString());
-            mActivity.LiberarPrimera();
-            mActivity.pausarHilos();
+            Log.i("IMAGEIO:","Out of memory, this shouldn't happen!!");
+
             loadImage(inputStream);
         }
 
