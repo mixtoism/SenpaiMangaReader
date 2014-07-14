@@ -41,6 +41,7 @@ public class MangaView extends Activity implements MangaReader{
     private ImageView imageView;
     private MangaPageViewAttacher mAttacher;
     private ArrayList<String> enlaces;
+    getNumImagenes task;
 
     private Bitmap siguiente,actual,anterior;
 
@@ -49,11 +50,12 @@ public class MangaView extends Activity implements MangaReader{
         super.onCreate(savedInstanceState);
         Intent origin = this.getIntent();
         Capitulo chap = (Capitulo) origin.getSerializableExtra("capitulo");
-        getNumImagenes task = new getNumImagenes(chap,this);
+        task = new getNumImagenes(chap,this);
         task.execute("");
 
         setContentView(R.layout.activity_manga_view);
         findViewById(R.id.manga_top).setVisibility(View.INVISIBLE);
+
         findViewById(R.id.manga_top).findViewById(R.id.backToMenu).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -83,12 +85,18 @@ public class MangaView extends Activity implements MangaReader{
      * @param enlaces Enlaces a imagenes
      * @param imagen La primera imagen
      */
-    public void showAndLoad(ArrayList<String> enlaces, Bitmap imagen) {
+    public void showAndLoad(ArrayList<String> enlaces, final Bitmap imagen) {
         nActual = 0;
         this.imageView.setImageBitmap(imagen);
         imageView.invalidate();
         mAttacher.update();
         actual = imagen;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                writeimageToDisk(imagen,0);
+            }
+        }).start();
         this.enlaces = enlaces;
         pag = new getPagina[enlaces.size()];
         actualizarTexto();
@@ -123,7 +131,7 @@ public class MangaView extends Activity implements MangaReader{
         maximo = maximo > i ? maximo : i;
 
     }
-    public final int hilosMAX = 3;
+    public final int hilosMAX = 1;
 
     public Runnable r = new Runnable() {
         @Override
@@ -155,31 +163,43 @@ public class MangaView extends Activity implements MangaReader{
 
         if(this.siguiente != null) {
             nActual++;
+            //Free Memory, as much as i can
+            if(nActual > 1) anterior.recycle();
+
+            anterior = null;
             this.anterior = Bitmap.createBitmap(this.actual);
+
             this.actual = Bitmap.createBitmap(this.siguiente);
             this.imageView.setImageBitmap(actual);
+
             mAttacher.update();
-            if (nActual + 1 < enlaces.size())
-                new Thread(new Runnable() {
+            if (nActual + 1 < enlaces.size()) {
+                tsiguiente = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         siguiente = readImageFromDisk(nActual + 1);
                     }
 
-                }).start();
+                });
+                tsiguiente.start();
+            }
             else
                 this.siguiente = null;
         }
     }
-
+    Thread tsiguiente;
 
     public void previousImage() {
         if (anterior != null) {
-            this.siguiente = Bitmap.createBitmap(this.actual);
-            this.actual = Bitmap.createBitmap(this.anterior);
-            nActual--;
-            this.imageView.setImageBitmap(actual);
+
+            siguiente = Bitmap.createBitmap(actual);
+            actual = null;
+            actual = Bitmap.createBitmap(anterior);
+            imageView.setImageBitmap(actual);
             mAttacher.update();
+
+            nActual--;
+
             if (nActual > 0) new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -197,29 +217,61 @@ public class MangaView extends Activity implements MangaReader{
 
 
 
+    public void writeimageToDisk(byte buf[],int idx) {
+
+        String estado = Environment.getExternalStorageState();
+
+        if(estado.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File f = getExternalFilesDir(null);
+                if(f != null) {
+                    String path = f.toString();
+
+                    OutputStream fOut;
+                    File file = new File(path, idx + ".snp");
+
+                    fOut = new FileOutputStream(file);
+                    fOut.write(buf);
+                    fOut.flush();
+                    fOut.close();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(tsiguiente != null) {
+                nextAvailable = true;
+            }
+        }
+    }
+
     public void writeimageToDisk(Bitmap image,int idx) {
 
         String estado = Environment.getExternalStorageState();
 
-         if(estado.equals(Environment.MEDIA_MOUNTED)) {
-             try {
-             File f = getExternalFilesDir(null);
-             if(f != null) {
-                 String path = f.toString();
+        if(estado.equals(Environment.MEDIA_MOUNTED)) {
+            try {
+                File f = getExternalFilesDir(null);
+                if(f != null) {
+                    String path = f.toString();
 
-                 OutputStream fOut;
-                 File file = new File(path, idx + ".snp");
+                    OutputStream fOut;
+                    File file = new File(path, idx + ".snp");
 
-                 fOut = new FileOutputStream(file);
-                 image.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
-                 fOut.flush();
-                 fOut.close();
-             }
+                    fOut = new FileOutputStream(file);
+                    image.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                    if(idx > 1)image.recycle(); //Be carefull to not disallocate the first bitmap
+                    fOut.flush();
+                    fOut.close();
+                }
 
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-         }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            if(tsiguiente != null) {
+                nextAvailable = true;
+            }
+        }
     }
 
 
@@ -230,13 +282,21 @@ public class MangaView extends Activity implements MangaReader{
         Bitmap bitmap = null;
         if(estado.equals(Environment.MEDIA_MOUNTED) || estado.equals(Environment.MEDIA_MOUNTED_READ_ONLY)) {
             File ruta_sd = getExternalFilesDir(null);
+            File f = new File(ruta_sd.getAbsolutePath()+"/"+idx+".snp");
+            if(!f.exists()) {
+                while(!nextAvailable) { //Espera activa, debo solucionar
+                    ;
+                }
+                nextAvailable = false;
+            }
             if(ruta_sd != null)
-            bitmap = BitmapFactory.decodeFile(ruta_sd.getAbsolutePath()+"/"+idx+".snp");
+            bitmap = BitmapFactory.decodeFile(f.toString());
 
         }
         return bitmap;
     }
 
+    boolean nextAvailable = false;
     public void showTopNavegationBar() {
         final View v = findViewById(R.id.manga_top);
         if(v.getVisibility()==View.INVISIBLE) {
@@ -251,9 +311,11 @@ public class MangaView extends Activity implements MangaReader{
                         @Override
                         public void run() {
                             hideTopNavegationBar();
+
                         }
                     });
                 }
+
             }).start();
         }
         else hideTopNavegationBar();
@@ -265,10 +327,16 @@ public class MangaView extends Activity implements MangaReader{
     @Override
     public void onStop() {
         super.onStop();
-
-        for(int i = 0; i < pag.length; i++) {
-            (new File(getExternalFilesDir(null),i+".snp")).delete();
-            if(pag[i]!=null)pag[i].cancel(true);
+        if(enlaces != null) {
+            for (int i = 0; i < enlaces.size(); i++) {
+                (new File(getExternalFilesDir(null), i + ".snp")).delete();
+                if (pag[i] != null) pag[i].cancel(true);
+            }
+        }
+        else {
+            if(task != null){
+                task.cancel(true);
+            }
         }
     }
 

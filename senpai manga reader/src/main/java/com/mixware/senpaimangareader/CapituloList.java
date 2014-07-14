@@ -1,5 +1,6 @@
 package com.mixware.senpaimangareader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -60,6 +61,12 @@ public class CapituloList extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id ==  R.id.action_settings) {
+            return true;
+        }
+        if (id == R.id.actualizar) {
+            Intent mIntent = new Intent(this,CapituloList.class);
+            mIntent.putExtra("manga",m);
+            startActivity(mIntent);
             return true;
         }
         return super.onOptionsItemSelected(item);

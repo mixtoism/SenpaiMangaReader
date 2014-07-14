@@ -22,8 +22,10 @@ public class getPagina extends AsyncTask<String,String,String> {
     String url;
     Bitmap imagen;
     int i;
+    byte buf [];
     MangaView mActivity;
     DownloadService mService;
+    InputStream inputStream;
 
     public static final String USER_AGENT = getMangas.USER_AGENT;
     public static final int font = getMangas.font;
@@ -69,8 +71,6 @@ public class getPagina extends AsyncTask<String,String,String> {
 
             loadImage(inputStream);
         }
-
-
     }
 
     protected void onPostExecute(String res) {

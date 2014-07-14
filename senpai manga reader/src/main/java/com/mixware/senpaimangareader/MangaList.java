@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,7 +37,6 @@ public class MangaList extends ActionBarActivity {
     }
 
     public void CapitulosManga(int i) {
-        Log.i("","Entro en capitulosmanga");
         Manga m = (Manga) mAdapter.getItem(i);
         Intent mIntent = new Intent(this,CapituloList.class);
         mIntent.putExtra("manga",m);

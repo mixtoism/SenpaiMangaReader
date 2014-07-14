@@ -1,14 +1,13 @@
 package com.mixware.senpaimangareader;
 
 import android.content.Context;
-import android.database.DataSetObserver;
-import android.util.Log;
+import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -52,11 +51,21 @@ public class MangaAdapter extends BaseAdapter implements Filterable{
 
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-
-            TextView tv = new TextView(mContext);
-            tv.setText(mItems.get(i).getNombre());
-            return tv;
+    public View getView(final int i, View view, ViewGroup viewGroup) {
+        LayoutInflater inflater = (LayoutInflater)   mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        view  = inflater.inflate(R.layout.list_manga_item_view,null);
+        TextView tv = (TextView) view.findViewById(R.id.manga_title);
+        tv.setText(mItems.get(i).getNombre());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Manga m = mItems.get(i);
+                Intent mIntent = new Intent(mContext,CapituloList.class);
+                mIntent.putExtra("manga",m);
+                mContext.startActivity(mIntent);
+            }
+        });
+        return view;
     }
 
     @Override
