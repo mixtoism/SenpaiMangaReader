@@ -212,7 +212,7 @@ public class MangaView extends Activity implements MangaReader{
     }
 
     public void actualizarTexto() {
-        ((TextView)(findViewById(R.id.manga_top).findViewById(R.id.pagdepag))).setText(nActual + " de " + enlaces.size());
+        ((TextView)(findViewById(R.id.manga_top).findViewById(R.id.pagdepag))).setText(nActual + " de " + (enlaces.size()-1));
     }
 
 

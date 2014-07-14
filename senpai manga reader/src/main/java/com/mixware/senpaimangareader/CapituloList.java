@@ -67,6 +67,7 @@ public class CapituloList extends ActionBarActivity {
             Intent mIntent = new Intent(this,CapituloList.class);
             mIntent.putExtra("manga",m);
             startActivity(mIntent);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -1,5 +1,7 @@
 package com.mixware.senpaimangareader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -28,6 +30,8 @@ public class getMangas extends AsyncTask<String,String,String> {
     static int font = 1;
     public getMangas(FullscreenActivity fa) {
         mActivity = fa;
+        SharedPreferences sp = mActivity.getApplicationContext().getSharedPreferences("source", Context.MODE_MULTI_PROCESS);
+
     }
     @Override
     protected String doInBackground(String... strings) {
