@@ -1,7 +1,9 @@
 package com.mixware.senpaimangareader;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
@@ -12,6 +14,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 
@@ -22,7 +27,25 @@ public class MangaList extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setTitle("Listado de Mangas");
-        ArrayList<Manga> mangas = (ArrayList<Manga>) this.getIntent().getSerializableExtra("lista");
+        SharedPreferences sp;
+        ArrayList<Manga> mangas = null;
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        int font = Integer.parseInt(sp.getString("source","1"));
+
+            String path = getExternalFilesDir(null)+"/mangas.dat";
+            if( (new File(path)).exists()) { // if already has an offline copy
+                ObjectInputStream ois = null;
+                try {
+                    ois = new ObjectInputStream(new FileInputStream(path));
+                    mangas = (ArrayList<Manga>)ois.readObject();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
         setContentView(R.layout.activity_manga_list);
         mAdapter = new MangaAdapter(mangas,this);
 

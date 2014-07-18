@@ -19,7 +19,7 @@ public class getCapitulos extends AsyncTask<String,String,String>{
     private String url;
     CapituloList mActivity;
     public static final String USER_AGENT = getMangas.USER_AGENT;
-    public static final int font = getMangas.font;
+    public static  int font = getMangas.font;
     ArrayList<Capitulo> mChaps;
     public getCapitulos(CapituloList capituloList, String s) {
         url = s;
@@ -30,6 +30,7 @@ public class getCapitulos extends AsyncTask<String,String,String>{
     protected String doInBackground(String... strings) {
         try {
             mChaps = new ArrayList<Capitulo>();
+            font = Utilidades.getSource(mActivity);
 
             switch (font) {
                 case 0:
@@ -93,8 +94,8 @@ public class getCapitulos extends AsyncTask<String,String,String>{
         for(Element mElement : elements) {
             String str = mElement.toString();
             String enlace = str.split("href=\"")[1].split("\"")[0];
-            String n_cap = enlace.split("/c")[1];
-            mChaps.add(new Capitulo("http://es.mangahere.co"+enlace,n_cap));
+            String n_cap = enlace.split("/c")[1].split("/")[0];
+            mChaps.add(new Capitulo("http://es.mangahere.co"+enlace,"Capítulo "+n_cap));
         }
     }
 }

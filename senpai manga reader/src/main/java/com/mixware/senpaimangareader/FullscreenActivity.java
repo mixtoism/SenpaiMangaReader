@@ -45,7 +45,8 @@ public class FullscreenActivity extends Activity {
             //This is an intent to keep the UI working well
 
                     Intent mIntent = new Intent(FullscreenActivity.this, MangaList.class);
-                    mIntent.putExtra("lista", mangas);
+//                    mIntent.putExtra("lista", mangas);
+
 
                     startActivity(mIntent);
 

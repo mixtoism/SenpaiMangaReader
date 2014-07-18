@@ -25,19 +25,21 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     DownloadService downloadService;
     Bitmap imagen;
     public final static String USER_AGENT = getMangas.USER_AGENT;
-    public final static int font = getMangas.font;
+    public static int font;
     int id;
     public getNumImagenes(Capitulo chap, MangaView m) {
         this.chap = chap;
         this.mActivity = m;
         downloadService = null;
+        font = Utilidades.getSource(mActivity);
     }
 
     public getNumImagenes(Capitulo chap, DownloadService downloadService) {
         this.chap = chap;
         this.downloadService = downloadService;
         this.mActivity = null;
-        this.id = id;
+        font = Utilidades.getSource(downloadService);
+
     }
     @Override
     protected String doInBackground(String... strings) {
@@ -100,6 +102,7 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
         for(int i = 0; i < n_pags; i++) {
             paginas.add(chap.getEnlace() + (i + 1) + ".html");
         }
+        getImagen(doc);
     }
 
     public void getImagen(Document doc) throws IOException {

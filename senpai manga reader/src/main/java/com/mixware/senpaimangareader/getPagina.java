@@ -28,12 +28,13 @@ public class getPagina extends AsyncTask<String,String,String> {
     InputStream inputStream;
 
     public static final String USER_AGENT = getMangas.USER_AGENT;
-    public static final int font = getMangas.font;
+    public static int font = getMangas.font;
     public getPagina(String nImagen, MangaView viewManga, int i) {
         url = nImagen;
         mActivity = viewManga;
         mService = null;
         this.i = i;
+        font = Utilidades.getSource(mActivity);
     }
 
     public getPagina(String nImagen,DownloadService service, int i) {
@@ -41,6 +42,7 @@ public class getPagina extends AsyncTask<String,String,String> {
         this.mService = service;
         mActivity = null;
         this.i = i;
+        font = Utilidades.getSource(mService);
     }
 
     @Override

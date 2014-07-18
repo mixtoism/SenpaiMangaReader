@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.preference.PreferenceManager;
 
 /**
  * Created by pargon on 23/06/2014.
@@ -37,6 +39,11 @@ public class Utilidades {
                     }
                 });
         return builder;
+    }
 
+    public static int getSource(Context mContext) {
+        SharedPreferences sp;
+        sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return Integer.parseInt(sp.getString("source","1"));
     }
 }

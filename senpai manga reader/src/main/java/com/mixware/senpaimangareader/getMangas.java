@@ -1,8 +1,6 @@
 package com.mixware.senpaimangareader;
 
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.jsoup.Jsoup;
@@ -33,10 +31,8 @@ public class getMangas extends AsyncTask<String,String,String> {
     static int font = 1;
     public getMangas(FullscreenActivity fa) {
         mActivity = fa;
-        SharedPreferences sp;
-        sp = PreferenceManager.getDefaultSharedPreferences(mActivity.getApplicationContext());
-        font = Integer.parseInt(sp.getString("source","1"));
-        font = 2; //Temporaly
+        font = Utilidades.getSource(mActivity);
+
 
     }
     @Override

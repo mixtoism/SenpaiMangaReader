@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class getPaginasCapitulos extends AsyncTask<String,String,String> {
     public final static String USER_AGENT = getMangas.USER_AGENT;
-    public static final int font = getMangas.font;
+    public static int font = getMangas.font;
     private CapituloList mCaps;
     private Manga m;
     private ArrayList<String> pags_cap;
@@ -26,6 +26,7 @@ public class getPaginasCapitulos extends AsyncTask<String,String,String> {
     public getPaginasCapitulos(CapituloList mCaps, Manga m) {
         this.mCaps = mCaps;
         this.m = m;
+        font = Utilidades.getSource(mCaps);
     }
 
 
@@ -56,7 +57,6 @@ public class getPaginasCapitulos extends AsyncTask<String,String,String> {
     private void modoOnLine() {
         try{
             if(font == 0) {
-                int num_pags = 1;
                 String s_previo = "";
                 String s = "";
                 Document doc = Jsoup.connect(m.getEnlace()).get();
