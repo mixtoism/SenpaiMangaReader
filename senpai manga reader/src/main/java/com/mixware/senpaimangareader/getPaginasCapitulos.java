@@ -79,7 +79,7 @@ public class getPaginasCapitulos extends AsyncTask<String,String,String> {
                     pags_cap.add(s);
                 }
             }// Segunda tarea, obtencion del numero de paginas de capitulos que hay
-            else {
+            else { //Solo hay una pagina con el numero de capitulos
                 pags_cap.add(m.getEnlace());
             }
         } catch (IOException ex) {

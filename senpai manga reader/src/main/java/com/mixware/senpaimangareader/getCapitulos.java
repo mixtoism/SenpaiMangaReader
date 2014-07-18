@@ -30,40 +30,19 @@ public class getCapitulos extends AsyncTask<String,String,String>{
     protected String doInBackground(String... strings) {
         try {
             mChaps = new ArrayList<Capitulo>();
-            /**
-             * Font 0 is ESMangaOnline, ahora está caída
-             */
-            if(font == 0) {
 
+            switch (font) {
+                case 0:
+                    getCapitulos_EsMangaOnline();
+                    break;
+                case 1:
+                    getCapitulos_EsManga();
+                    break;
+                case 2:
+                    getCapitulos_EsMangaHere();
+                    break;
+            }
 
-                Document doc = Jsoup.connect(url).get();
-                Elements elements = doc.getElementsByClass("con");
-                Element element = elements.first();
-                elements = element.getElementsByTag("ul");
-                // System.out.println(elements);
-                int x = elements.size() == 4 ? 2 : 1;
-                element = elements.get(x);
-                elements = element.getElementsByTag("a");
-                for (Element e : elements) {
-                    String s = e.toString();
-                    s = s.split("href=\"")[1].split("\"")[0];
-                    mChaps.add(new Capitulo(s));
-                }
-            }
-            else {
-                Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
-                Element el = doc.getElementById("capitulos");
-                Elements e = el.getElementsByTag("a");
-                Iterator<Element> iterator = e.iterator();
-                while(iterator.hasNext()) {
-                    el = iterator.next();
-                    String href = el.toString().split("href=\"")[1].split("\"")[0];
-                    String nombre ="Capítulo " + href.split("/c")[1].split("\"")[0].split("/")[0];
-                    href = "http://esmanga.com/" + href;
-                    mChaps.add(new Capitulo(href,nombre));
-                    iterator.next();
-                    }
-            }
         } catch (IOException ex) {
             Log.i("getCapitulos TASK","OCURRIO ALGUN ERROR buscando las paginas");
         }
@@ -76,5 +55,46 @@ public class getCapitulos extends AsyncTask<String,String,String>{
             mActivity.addCapitulos(mChaps);
 
         }else;
+    }
+
+    public void getCapitulos_EsMangaOnline() throws IOException {
+        Document doc = Jsoup.connect(url).get();
+        Elements elements = doc.getElementsByClass("con");
+        Element element = elements.first();
+        elements = element.getElementsByTag("ul");
+        int x = elements.size() == 4 ? 2 : 1;
+        element = elements.get(x);
+        elements = element.getElementsByTag("a");
+        for (Element e : elements) {
+            String s = e.toString();
+            s = s.split("href=\"")[1].split("\"")[0];
+            mChaps.add(new Capitulo(s));
+        }
+    }
+
+    public void getCapitulos_EsManga() throws IOException {
+        Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
+        Element el = doc.getElementById("capitulos");
+        Elements e = el.getElementsByTag("a");
+        Iterator<Element> iterator = e.iterator();
+        while(iterator.hasNext()) {
+            el = iterator.next();
+            String href = el.toString().split("href=\"")[1].split("\"")[0];
+            String nombre ="Capítulo " + href.split("/c")[1].split("\"")[0].split("/")[0];
+            mChaps.add(new Capitulo("http://esmanga.com/" + href,nombre));
+            iterator.next();
+        }
+    }
+
+    public void getCapitulos_EsMangaHere() throws IOException {
+        Document doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
+        Element el = doc.getElementsByTag("section").get(2).getElementsByTag("ul").get(1);
+        Elements elements = el.getElementsByTag("li");
+        for(Element mElement : elements) {
+            String str = mElement.toString();
+            String enlace = str.split("href=\"")[1].split("\"")[0];
+            String n_cap = enlace.split("/c")[1];
+            mChaps.add(new Capitulo("http://es.mangahere.co"+enlace,n_cap));
+        }
     }
 }

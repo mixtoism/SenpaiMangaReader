@@ -48,8 +48,8 @@ public class getPagina extends AsyncTask<String,String,String> {
         Document doc;
         try {
             doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
-            Element element = doc.getElementsByTag("img").get(font == 0 ? 0 : 1);
-            String img = (font == 0 ? "":"http://esmanga.com/" ) + element.toString().split("src=\"")[1].split("\"")[0];
+            Element element = doc.getElementsByTag("img").get((font == 0 || font == 2) ? 0 : 1);
+            String img = ((font == 0 || font == 2) ? "":"http://esmanga.com/" ) + element.toString().split("src=\"")[1].split("\"")[0];
 
             URL imageUrl;
             HttpURLConnection conn;

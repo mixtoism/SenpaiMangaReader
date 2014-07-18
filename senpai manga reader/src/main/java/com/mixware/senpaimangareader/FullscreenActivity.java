@@ -43,14 +43,12 @@ public class FullscreenActivity extends Activity {
         else {
 
             //This is an intent to keep the UI working well
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
+
                     Intent mIntent = new Intent(FullscreenActivity.this, MangaList.class);
                     mIntent.putExtra("lista", mangas);
+
                     startActivity(mIntent);
-                }
-            }).start();
+
         }
     }
 }
