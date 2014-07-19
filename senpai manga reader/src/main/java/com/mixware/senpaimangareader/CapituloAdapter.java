@@ -118,7 +118,7 @@ public class CapituloAdapter implements ListAdapter{
         final File f = new File(path);
         final boolean[] availableOffLine = {(f.exists() && f.isDirectory())};
         if(availableOffLine[0])
-            btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(),R.drawable.ic_action_discard));
+            btnBajar.setBackground(mContext.getResources().getDrawable(R.drawable.ic_action_discard));
         btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), chap.isReaded() ? R.drawable.ic_action_accept_marked : R.drawable.ic_action_accept));
         final View finalView = view;
         finalView.setOnClickListener(new View.OnClickListener() {
@@ -129,6 +129,7 @@ public class CapituloAdapter implements ListAdapter{
                        readed.add(chap);
                        btnVisto.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_accept_marked));
                    }
+
 
                    if (!availableOffLine[0]) {
                        Intent mIntent = new Intent(mContext, MangaView.class);

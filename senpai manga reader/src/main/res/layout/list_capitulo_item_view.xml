@@ -21,8 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton"
-        android:src="@drawable/ic_action_accept"
-        android:background="#ff8800"
+        android:background="@drawable/ic_action_accept"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/imageButton2"
         android:layout_marginRight="2dp" />
@@ -31,9 +30,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton2"
-        android:src="@drawable/ic_action_download"
+        android:background="@drawable/ic_action_download"
         android:layout_marginRight="0dp"
-        android:background="#ff8800"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
 

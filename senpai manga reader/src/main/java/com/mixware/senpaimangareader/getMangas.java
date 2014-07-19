@@ -40,7 +40,7 @@ public class getMangas extends AsyncTask<String,String,String> {
         try {
             mangas = new ArrayList<Manga>();
             String path = mActivity.getExternalFilesDir(null)+"/mangas.dat";
-            if(false && (new File(path)).exists()) { // if already has an offline copy
+            if(false &&(new File(path)).exists()) { // if already has an offline copy
                 ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
                 mangas = (ArrayList<Manga>)ois.readObject();
             }
@@ -53,6 +53,7 @@ public class getMangas extends AsyncTask<String,String,String> {
                         getMangas_EsManga();
                         break;
                     case 2:
+                       // Toast.makeText(mActivity, "Este servidor en ocasiones va un poco lento, no desesperes",Toast.LENGTH_LONG).show();
                         getMangas_EsMangaHere();
                         break;
                     default:
@@ -80,7 +81,7 @@ public class getMangas extends AsyncTask<String,String,String> {
 
     /**
      * Get the list of mangas from esmangaonline.com
-     * TODO: check if it still works when page is online
+     * Doesn't work
      */
     private void getMangas_ESMangaOnline() throws IOException {
         Document doc = Jsoup.connect(url[0]).userAgent(USER_AGENT).get();

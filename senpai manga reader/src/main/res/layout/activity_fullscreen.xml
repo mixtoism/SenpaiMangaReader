@@ -9,13 +9,14 @@
          is needed to present your content, e.g. VideoView, SurfaceView,
          TextureView, etc. -->
     <ImageView
-        android:layout_width="334dp"
-        android:layout_height="334dp"
         android:id="@+id/logoView"
-        android:src="@drawable/logo"
+        android:src="@drawable/wall"
         android:layout_gravity="center_horizontal|top"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="49dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
     <!-- This FrameLayout insets its children based on system windows using

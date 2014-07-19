@@ -119,7 +119,7 @@ public class DownloadService extends Service {
         {
             if(running) {
                 NotificationCompat.Builder  mBuilder2 = new NotificationCompat.Builder(this);
-                mBuilder2.setContentTitle(((Manga) intent.getSerializableExtra("manga")).getNombre() +
+                mBuilder2.setContentTitle(((Manga) intent.getSerializableExtra("manga")).getNombre() + " " +
                         ((Capitulo) intent.getSerializableExtra("capitulo")).getCapitulo())
                         .setContentText("En cola")
                         .setSmallIcon(R.drawable.ic_launcher);
@@ -143,7 +143,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
 
-        Log.d("SERVICE-DESTROY","DESTORY");
+        Log.d("SERVICE-DESTROY","DESTROY");
         serviceState=false;
     }
 

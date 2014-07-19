@@ -6,7 +6,7 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_manga_list">MangaList</string>
     <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">Opciones</string>
     <string name="title_activity_capitulo_list">CapituloList</string>
     <string name="title_activity_manga_view">MangaView</string>
     <string name="title_activity_main">MainActivity</string>

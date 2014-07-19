@@ -13,12 +13,12 @@
 
     <string name="pref_source_selection">Fuente</string>
     <string-array name="pref_source_selection">
-        <item>esmangaonline.com</item>
+        <item>esmangaonline.com [Offline]</item>
         <item>esmanga.com</item>
         <item>mangahere.co (Español)</item>
     </string-array>
     <string-array name="pref_source_list_values">
-        <item>0</item>
+        <item>1</item> <!--Unavailable -->
         <item>1</item>
         <item>2</item>
 
