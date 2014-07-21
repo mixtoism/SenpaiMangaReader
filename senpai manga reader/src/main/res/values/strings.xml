@@ -15,5 +15,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_about_jsoup">about Jsoup</string>
     <string name="title_activity_about_photo_view">aboutPhotoView</string>
+    <string name="title_activity_ad_mob">AdMobActivity</string>
 
 </resources>

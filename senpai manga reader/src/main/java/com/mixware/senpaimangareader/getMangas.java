@@ -9,10 +9,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,9 +38,9 @@ public class getMangas extends AsyncTask<String,String,String> {
         try {
             mangas = new ArrayList<Manga>();
             String path = mActivity.getExternalFilesDir(null)+"/mangas.dat";
-            if(false &&(new File(path)).exists()) { // if already has an offline copy
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
-                mangas = (ArrayList<Manga>)ois.readObject();
+            if((new File(path)).exists()) { // if already has an offline copy
+                //ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
+                mangas.add(new Manga("",""));
             }
             else {
                 switch (font) {
@@ -68,9 +66,9 @@ public class getMangas extends AsyncTask<String,String,String> {
             ex.printStackTrace();
              Log.i("getMangas TASK","ERROR DOWNLOADING");
 
-        } catch (ClassNotFoundException e) {
+        }/* catch (ClassNotFoundException e) {
             Log.e("Error","Error Downloadinf");
-        }
+        }*/
         return null;
     }
 

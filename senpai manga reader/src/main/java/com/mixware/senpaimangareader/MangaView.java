@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.mixware.senpaimangareader.util.SystemUiHider;
 
 import java.io.File;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
  *
  * @see SystemUiHider
  */
-public class MangaView extends Activity implements MangaReader{
+public class MangaView extends Activity implements MangaReader {
 
 
     private boolean finish = false;
@@ -42,12 +45,29 @@ public class MangaView extends Activity implements MangaReader{
     private MangaPageViewAttacher mAttacher;
     private ArrayList<String> enlaces;
     getNumImagenes task;
+    public boolean PREMIUM = false;
 
     private Bitmap siguiente,actual,anterior;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(!PREMIUM) {
+            final InterstitialAd interstitial = new InterstitialAd(this);
+            interstitial.setAdUnitId("ca-app-pub-2404835084618867/2386157681");
+            AdRequest adRequest = new AdRequest.Builder().build();
+
+            // Begin loading your interstitial.
+            interstitial.loadAd(adRequest);
+            interstitial.setAdListener(new AdListener() {
+                @Override
+                public void onAdLoaded() {
+                    super.onAdLoaded();
+                    interstitial.show();
+                }
+            });
+
+        }
         Intent origin = this.getIntent();
         Capitulo chap = (Capitulo) origin.getSerializableExtra("capitulo");
         task = new getNumImagenes(chap,this);
