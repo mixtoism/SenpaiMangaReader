@@ -17,6 +17,12 @@
                 android:targetPackage="com.mixware.senpaimangareader"
                 android:targetClass="com.mixware.senpaimangareader.aboutPhotoView" />
         </Preference>
+        <Preference
+            android:key="about2"
+            android:title="Icono por Ernesto Acebrón">
+            <intent android:action="android.intent.action.VIEW"
+                android:data="http://ernestoacebron.com/" />
+            </Preference>
 
 
 

@@ -17,7 +17,7 @@ import java.util.ArrayList;
  */
 public class getPaginasCapitulos extends AsyncTask<String,String,String> {
     public final static String USER_AGENT = getMangas.USER_AGENT;
-    public static int font = getMangas.font;
+    public static int font ;
     private CapituloList mCaps;
     private Manga m;
     private ArrayList<String> pags_cap;

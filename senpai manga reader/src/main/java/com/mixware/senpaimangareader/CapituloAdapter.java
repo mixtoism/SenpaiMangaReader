@@ -12,6 +12,10 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -132,7 +136,9 @@ public class CapituloAdapter implements ListAdapter{
 
 
                    if (!availableOffLine[0]) {
-                       Intent mIntent = new Intent(mContext, MangaView.class);
+                       Intent mIntent = new Intent(mContext, OnlineReaderAd.class);//TODO: Change in the premium version
+                      // Intent mIntent = new Intent(mContext, MangaView.class);//TODO: Change in the premium version
+
                        mIntent.putExtra("capitulo", chap);
                        mContext.startActivity(mIntent);
                    } else {
@@ -140,6 +146,7 @@ public class CapituloAdapter implements ListAdapter{
                            @Override
                            public void run() {
                                Intent mIntent = new Intent(mContext, OfflineViewer.class);
+                               //mIntent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
                                mIntent.putExtra("path", f);
                                mContext.startActivity(mIntent);
                            }
@@ -153,10 +160,30 @@ public class CapituloAdapter implements ListAdapter{
            public void onClick(View view) {
               if (!availableOffLine[0]) {
                   Toast.makeText(mContext, "Descargando", Toast.LENGTH_LONG).show();
-                  Intent mIntent = new Intent(mContext, DownloadService.class);
+                  final Intent mIntent = new Intent(mContext, DownloadService.class);
                   mIntent.putExtra("manga", m);
                   mIntent.putExtra("capitulo", mItems.get(nCap));
-                  mContext.startService(mIntent);
+                  final InterstitialAd interstitial = new InterstitialAd(mContext);
+                  interstitial.setAdUnitId("ca-app-pub-2404835084618867/2386157681");
+
+                  AdRequest adRequest = new AdRequest.Builder().build();
+
+                  // Begin loading your interstitial.
+                 interstitial.loadAd(adRequest);
+                 interstitial.setAdListener(new AdListener() {
+                      @Override
+                      public void onAdClosed() {
+                          super.onAdClosed();
+                          mContext.startService(mIntent);
+                      }
+
+                      @Override
+                      public void onAdLoaded() {
+                          super.onAdLoaded();
+                          interstitial.show();
+                      }
+                  });
+                  //mContext.startService(mIntent);
              } else {
                   if(Utilidades.checkInternetConnection(mContext)== Utilidades.TYPE_NOCONNECTION) {
                       Toast.makeText(mContext,"No puedes eliminar capitulos si no estás conectado",Toast.LENGTH_LONG).show();
@@ -176,7 +203,7 @@ public class CapituloAdapter implements ListAdapter{
                   }).start();
 
                   availableOffLine[0] = !availableOffLine[0];
-                  btnBajar.setImageBitmap(BitmapFactory.decodeResource(mContext.getResources(), R.drawable.ic_action_download));
+                  btnBajar.setBackground(mContext.getResources().getDrawable(R.drawable.ic_action_download));
                   }
               }
          }

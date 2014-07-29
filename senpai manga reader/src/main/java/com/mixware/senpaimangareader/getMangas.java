@@ -26,7 +26,7 @@ public class getMangas extends AsyncTask<String,String,String> {
     private FullscreenActivity mActivity;
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; rv:30.0) Gecko/20100101 Firefox/30.0";
     ArrayList<Manga> mangas;
-    static int font = 1;
+    public static int font;
     public getMangas(FullscreenActivity fa) {
         mActivity = fa;
         font = Utilidades.getSource(mActivity);
