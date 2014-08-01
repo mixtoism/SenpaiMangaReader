@@ -25,9 +25,11 @@ dependencies {
     compile project(':library')
     compile files('libs/libGoogleAnalyticsServices.jar')
     // You must install or update the Support Repository through the SDK manager to use this dependency.
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
+    compile files('libs/Parse-1.5.1/Parse-1.5.1.jar')
+    // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:appcompat-v7:19.+'
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:19.+'
     compile 'com.google.android.gms:play-services:+'
-    compile files('libs/Parse-1.5.1/Parse-1.5.1.jar')
 }
