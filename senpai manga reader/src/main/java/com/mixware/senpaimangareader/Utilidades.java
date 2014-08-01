@@ -15,7 +15,7 @@ import android.preference.PreferenceManager;
  * Created by pargon on 23/06/2014.
  */
 public class Utilidades {
-    public static final int TYPE_NOCONNECTION = 0x00000000;
+    public static final int TYPE_NOCONNECTION = 0x00000010;
 
     /**
      * Checks the network connection

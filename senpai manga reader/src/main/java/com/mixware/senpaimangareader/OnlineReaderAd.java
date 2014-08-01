@@ -13,13 +13,14 @@ import com.google.android.gms.ads.InterstitialAd;
 
 public class OnlineReaderAd extends Activity {
 
+    InterstitialAd interstitial;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final Capitulo c = (Capitulo) getIntent().getSerializableExtra("capitulo");
         setContentView(R.layout.activity_online_reader_ad);
-        final InterstitialAd interstitial = new InterstitialAd(this);
-        interstitial.setAdUnitId("ca-app-pub-2404835084618867/2386157681");
+        interstitial = new InterstitialAd(this);
+        interstitial.setAdUnitId("ca-app-pub-2404835084618867/9710301280");
         AdRequest adRequest = new AdRequest.Builder().build();
 
         // Begin loading your interstitial.
