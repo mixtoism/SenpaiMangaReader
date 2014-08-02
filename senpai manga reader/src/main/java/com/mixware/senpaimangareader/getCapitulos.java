@@ -55,7 +55,7 @@ public class getCapitulos extends AsyncTask<String,String,String>{
             Log.i("getMangas TASK","STARTING NEXT ACTIVITY");
             mActivity.addCapitulos(mChaps);
 
-        }else;
+        }
     }
 
     public void getCapitulos_EsMangaOnline() throws IOException {

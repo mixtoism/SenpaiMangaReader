@@ -87,15 +87,6 @@ public class mangasFragment extends Fragment implements MangaListListener {
 
         // TODO: Change Adapter to display your content
         lv.setAdapter(mAdapter);
-        /**lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(mListener != null) {
-                    mListener.onItemSelected((Manga) mAdapter.getItem(i));
-                }
-            }
-        });*/
-
         return v;
 
     }

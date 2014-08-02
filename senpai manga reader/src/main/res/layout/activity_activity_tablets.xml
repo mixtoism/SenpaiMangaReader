@@ -19,7 +19,7 @@
     <fragment
         android:layout_width="1px"
         android:layout_height="match_parent"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:name="com.mixware.senpaimangareader.capitulosFragment"
         android:id="@+id/fragment2"
         android:layout_gravity="right" />

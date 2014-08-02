@@ -69,7 +69,7 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
     @Override
     public View onCreateView (LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
-        v =  inflater.inflate(R.layout.manga_fragment,container,false);
+        v =  inflater.inflate(R.layout.capitulos_fragment_list,container,false);
         return v;
 
     }
@@ -101,18 +101,17 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
         this.m = m;
         if(v != null && lv == null) {
             lv = (ListView) v.findViewById(R.id.fragmentCapituloList);
-            mAdapter = new CapituloAdapter(mContext,m,this);
         }
-        if(lv != null) {
-            task = new  getPaginasCapitulos(this,m);
-        }
+        mAdapter = new CapituloAdapter(mContext,m,this);
+        task = new  getPaginasCapitulos(this,m);
+        task.doInBackground("");
 
     }
 
         @Override
         public Context getApplicationContext() {
-           return getApplicationContext();
-        }
+           return mContext;
+    }
 
         @Override
         public void CogerCapitulos(ArrayList<String> paginas) {
@@ -129,7 +128,7 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
             ArrayList<Capitulo> mCaps = new ArrayList<Capitulo>();
 
             for(String s : nCaps) {
-                mCaps.add(new Capitulo(null,s));
+                mCaps.add(new Capitulo(null, s));
             }
             mAdapter.addAll(mCaps);
             lv.setAdapter(mAdapter);
@@ -145,12 +144,12 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
 
         @Override
         public void startReading(Class mClass, Serializable capitulo) {
-            mListener.onStartReading(mClass,capitulo);
+            mListener.onStartReading(mClass, capitulo);
         }
 
         @Override
         public void startDownloadService(Class mClass, Capitulo c) {
-            mListener.onStartDownloading(mClass,c,m);
+            mListener.onStartDownloading(mClass, c, m);
         }
 
 
