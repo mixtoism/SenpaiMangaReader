@@ -35,7 +35,7 @@ public class OfflineViewer extends Activity implements MangaReader{
         Log.i("OFFLINE VIEWER","onCreate");
         setContentView(R.layout.activity_offline_viewer);
         nActual = 0;
-        path = (File) getIntent().getSerializableExtra("path");
+        path = (File) getIntent().getSerializableExtra("capitulo");
         nElemens = path.listFiles().length;
         image = (ImageView) this.findViewById(R.id.offline_manga_page);
         mAttacher = new MangaPageViewAttacher(image,this);

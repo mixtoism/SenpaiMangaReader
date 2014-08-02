@@ -18,15 +18,15 @@ import java.util.ArrayList;
 public class getPaginasCapitulos extends AsyncTask<String,String,String> {
     public final static String USER_AGENT = getMangas.USER_AGENT;
     public static int font ;
-    private CapituloList mCaps;
+    private DownloadCapitulo mCaps;
     private Manga m;
     private ArrayList<String> pags_cap;
     private Boolean online = null;
 
-    public getPaginasCapitulos(CapituloList mCaps, Manga m) {
+    public getPaginasCapitulos(DownloadCapitulo mCaps, Manga m) {
         this.mCaps = mCaps;
         this.m = m;
-        font = Utilidades.getSource(mCaps);
+        font = Utilidades.getSource(mCaps.getApplicationContext());
     }
 
 

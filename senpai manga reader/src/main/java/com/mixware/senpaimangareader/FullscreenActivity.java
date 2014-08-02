@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -71,13 +72,17 @@ public class FullscreenActivity extends Activity {
         if (mangas == null || mangas.isEmpty()) (new getMangas(this)).execute("");
         else {
 
-            //This is an intent to keep the UI working well
 
-                    Intent mIntent = new Intent(FullscreenActivity.this, MangaList.class);
-//                    mIntent.putExtra("lista", mangas);
-
-
-                    startActivity(mIntent);
+            Intent mIntent;
+            //May have problem with custom roms check in cyanogen
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                mIntent = new Intent(FullscreenActivity.this, activity_tablets.class);
+            }
+            else {
+                 mIntent = new Intent(FullscreenActivity.this, CapituloList.class);
+            }
+            mIntent.putExtra("lista", mangas);
+            startActivity(mIntent);
 
         }
     }

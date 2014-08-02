@@ -17,11 +17,11 @@ import java.util.Iterator;
  */
 public class getCapitulos extends AsyncTask<String,String,String>{
     private String url;
-    CapituloList mActivity;
+    DownloadCapitulo mActivity;
     public static final String USER_AGENT = getMangas.USER_AGENT;
     public static  int font = getMangas.font;
     ArrayList<Capitulo> mChaps;
-    public getCapitulos(CapituloList capituloList, String s) {
+    public getCapitulos(DownloadCapitulo capituloList, String s) {
         url = s;
         mActivity = capituloList;
     }
@@ -30,7 +30,7 @@ public class getCapitulos extends AsyncTask<String,String,String>{
     protected String doInBackground(String... strings) {
         try {
             mChaps = new ArrayList<Capitulo>();
-            font = Utilidades.getSource(mActivity);
+            font = Utilidades.getSource(mActivity.getApplicationContext());
 
             switch (font) {
                 case 0:

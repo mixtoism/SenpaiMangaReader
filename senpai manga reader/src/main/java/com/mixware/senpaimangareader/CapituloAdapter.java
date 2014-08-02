@@ -1,7 +1,6 @@
 package com.mixware.senpaimangareader;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
@@ -30,13 +29,15 @@ import java.util.ArrayList;
  */
 public class CapituloAdapter implements ListAdapter{
     Context mContext;
+    CapituloListListener mListener;
     Manga m;
     ArrayList<Capitulo> mItems;
     ArrayList<Capitulo> readed = new ArrayList<Capitulo>();
     String path;
 
-    public CapituloAdapter(Context mContext,Manga manga) {
+    public CapituloAdapter(Context mContext,Manga manga,CapituloListListener mListener) {
         this.mItems = new ArrayList<Capitulo>();
+        this.mListener = mListener;
         this.mContext = mContext;
         this.m = manga;
         path = mContext.getExternalFilesDir(null)+ "/" + m.getNombre()+".data";
@@ -136,19 +137,13 @@ public class CapituloAdapter implements ListAdapter{
 
 
                    if (!availableOffLine[0]) {
-                       Intent mIntent = new Intent(mContext, OnlineReaderAd.class);//TODO: Change in the premium version
-                      // Intent mIntent = new Intent(mContext, MangaView.class);//TODO: Change in the premium version
+                       mListener.startReading(OnlineReaderAd.class,chap);
 
-                       mIntent.putExtra("capitulo", chap);
-                       mContext.startActivity(mIntent);
                    } else {
                        new Thread(new Runnable() {
                            @Override
                            public void run() {
-                               Intent mIntent = new Intent(mContext, OfflineViewer.class);
-                               //mIntent.addFlags(Intent.FLAG_ACTIVITY_PREVIOUS_IS_TOP);
-                               mIntent.putExtra("path", f);
-                               mContext.startActivity(mIntent);
+                               mListener.startReading(OfflineViewer.class, f);
                            }
                        }).start();
                    }
@@ -160,9 +155,6 @@ public class CapituloAdapter implements ListAdapter{
            public void onClick(View view) {
               if (!availableOffLine[0]) {
                   Toast.makeText(mContext, "Descargando", Toast.LENGTH_LONG).show();
-                  final Intent mIntent = new Intent(mContext, DownloadService.class);
-                  mIntent.putExtra("manga", m);
-                  mIntent.putExtra("capitulo", mItems.get(nCap));
                   final InterstitialAd interstitial = new InterstitialAd(mContext);
                   interstitial.setAdUnitId("ca-app-pub-2404835084618867/2386157681");
 
@@ -174,7 +166,7 @@ public class CapituloAdapter implements ListAdapter{
                       @Override
                       public void onAdClosed() {
                           super.onAdClosed();
-                          mContext.startService(mIntent);
+                          mListener.startDownloadService(DownloadService.class,mItems.get(nCap));
                       }
 
                       @Override
@@ -183,7 +175,6 @@ public class CapituloAdapter implements ListAdapter{
                           interstitial.show();
                       }
                   });
-                  //mContext.startService(mIntent);
              } else {
                   if(Utilidades.checkInternetConnection(mContext)== Utilidades.TYPE_NOCONNECTION) {
                       Toast.makeText(mContext,"No puedes eliminar capitulos si no estás conectado",Toast.LENGTH_LONG).show();
