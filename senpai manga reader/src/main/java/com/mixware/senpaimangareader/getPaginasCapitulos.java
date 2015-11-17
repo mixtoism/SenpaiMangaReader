@@ -16,7 +16,6 @@ import java.util.ArrayList;
  * Created by pargon on 08/06/2014.
  */
 public class getPaginasCapitulos extends AsyncTask<String,String,String> {
-    public final static String USER_AGENT = getMangas.USER_AGENT;
     public static int font ;
     private CapituloList mCaps;
     private Manga m;

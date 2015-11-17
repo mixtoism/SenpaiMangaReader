@@ -24,7 +24,7 @@ public class getNumImagenes extends AsyncTask<String,String,String>{
     MangaView mActivity;
     DownloadService downloadService;
     Bitmap imagen;
-    public final static String USER_AGENT = getMangas.USER_AGENT;
+    public final static String USER_AGENT = "";
     public static int font;
     int id;
     public getNumImagenes(Capitulo chap, MangaView m) {

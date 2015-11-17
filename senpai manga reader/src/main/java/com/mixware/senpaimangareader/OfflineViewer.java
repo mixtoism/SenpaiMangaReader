@@ -14,12 +14,7 @@ import com.mixware.senpaimangareader.util.SystemUiHider;
 
 import java.io.File;
 
-/**
- * An example full-screen activity that shows and hides the system UI (i.e.
- * status bar and navigation/system bar) with user interaction.
- *
- * @see SystemUiHider
- */
+
 public class OfflineViewer extends Activity implements MangaReader{
     private MangaPageViewAttacher mAttacher;
     private ImageView image;

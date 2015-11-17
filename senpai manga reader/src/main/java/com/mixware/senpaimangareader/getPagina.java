@@ -27,7 +27,7 @@ public class getPagina extends AsyncTask<String,String,String> {
     DownloadService mService;
     InputStream inputStream;
 
-    public static final String USER_AGENT = getMangas.USER_AGENT;
+    public static final String USER_AGENT = "";
     public static int font = getMangas.font;
     public getPagina(String nImagen, MangaView viewManga, int i) {
         url = nImagen;
