@@ -7,10 +7,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class CapituloList extends ActionBarActivity {
+public class CapituloList extends ActionBarActivity implements DownloadCapitulo,CapituloListListener {
 
     private CapituloAdapter mAdapter;
     Manga m;
@@ -20,7 +21,7 @@ public class CapituloList extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         m = (Manga) this.getIntent().getSerializableExtra("manga");
-        mAdapter = new CapituloAdapter(this,m);
+        mAdapter = new CapituloAdapter(this,m,this);
 
         setContentView(R.layout.activity_capitulo_list);
         this.setTitle(m.getNombre());
@@ -30,7 +31,7 @@ public class CapituloList extends ActionBarActivity {
 
     }
 
-
+    @Override
     public void CogerCapitulos(ArrayList<String> paginas) {
         if(paginas == null || paginas.isEmpty()) new getPaginasCapitulos(this,m).execute("");
         for(String s : paginas) {
@@ -40,6 +41,7 @@ public class CapituloList extends ActionBarActivity {
         task.cancel(true);
     }
 
+    @Override
     public void addCapitulos (ArrayList<Capitulo> caps) {
         lv.setAdapter(mAdapter);
         mAdapter.addAll(caps);
@@ -87,6 +89,7 @@ public class CapituloList extends ActionBarActivity {
      * Le pasa los capitulos offline al adapter
      * @param nCaps chapter, only his name
      */
+    @Override
     public void CogerCapitulosOffline(ArrayList<String> nCaps) {
         ArrayList<Capitulo> mCaps = new ArrayList<Capitulo>();
         for(String s : nCaps) {
@@ -94,5 +97,23 @@ public class CapituloList extends ActionBarActivity {
         }
         mAdapter.addAll(mCaps);
         lv.setAdapter(mAdapter);
+    }
+
+
+    @Override
+    public void startReading(Class mClass, Serializable path) {
+        Intent mIntent = new Intent(CapituloList.this,mClass);
+        mIntent.putExtra("capitulo",path);
+        startActivity(mIntent);
+   }
+
+
+    @Override
+    public void startDownloadService(Class mClass, Capitulo c) {
+        Intent mIntent = new Intent(CapituloList.this,mClass);
+        mIntent.putExtra("manga",m);
+        mIntent.putExtra("capitulo",c);
+        startService(mIntent);
+
     }
 }

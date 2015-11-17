@@ -20,7 +20,7 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 
-public class MangaList extends ActionBarActivity {
+public class MangaList extends ActionBarActivity implements MangaListListener{
 
     private MangaAdapter mAdapter;
     @Override
@@ -47,7 +47,7 @@ public class MangaList extends ActionBarActivity {
             }
 
         setContentView(R.layout.activity_manga_list);
-        mAdapter = new MangaAdapter(mangas,this);
+        mAdapter = new MangaAdapter(mangas,this,this);
 
         ListView list = (ListView) findViewById(R.id.list);
         list.setAdapter(mAdapter);
@@ -109,5 +109,13 @@ public class MangaList extends ActionBarActivity {
             startActivity(mIntent);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void mangaSelected(Manga m) {
+        Intent mIntent = new Intent(MangaList.this,CapituloList.class);
+        mIntent.putExtra("manga",m);
+        startActivity(mIntent);
+
     }
 }
