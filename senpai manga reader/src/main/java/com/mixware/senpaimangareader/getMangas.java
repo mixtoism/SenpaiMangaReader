@@ -34,19 +34,7 @@ public class getMangas extends AsyncTask<String,String,String> {
                 mangas.add(new Manga("",""));
             }
             else {
-                switch (font) {
-                    case 0:
-                        mangas = ESMangaOnline.getMangas();
-                        break;
-                    case 1:
-                        mangas = ESManga.getMangas();
-                        break;
-                    case 2:
-                        mangas = MangaHere.getMangas();
-                        break;
-                    default:
-                        break;
-                }
+                 mangas = SubManga.getMangas();
 
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
                 oos.writeObject(mangas);

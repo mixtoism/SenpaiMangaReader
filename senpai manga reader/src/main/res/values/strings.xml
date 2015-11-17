@@ -17,5 +17,6 @@
     <string name="title_activity_about_photo_view">aboutPhotoView</string>
     <string name="title_activity_ad_mob">AdMobActivity</string>
     <string name="title_activity_online_reader_ad">OnlineReaderAd</string>
+    <string name="title_activity_activity_tablets">activity_tablets</string>
 
 </resources>

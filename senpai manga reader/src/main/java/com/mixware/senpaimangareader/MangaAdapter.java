@@ -1,7 +1,6 @@
 package com.mixware.senpaimangareader;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,9 +19,11 @@ public class MangaAdapter extends BaseAdapter implements Filterable{
     ArrayList<Manga> mItems;
     ArrayList<Manga> hidden = new ArrayList<Manga>();
     String searchTerm;
+    MangaListListener mListener;
 
-    public MangaAdapter(ArrayList<Manga> mItems, Context mContext) {
+    public MangaAdapter(ArrayList<Manga> mItems, Context mContext,MangaListListener listener) {
         this.mItems = mItems;
+        mListener = listener;
         this.mContext = mContext;
         searchTerm = "";
         hidden =(ArrayList<Manga>) mItems.clone();
@@ -55,14 +56,14 @@ public class MangaAdapter extends BaseAdapter implements Filterable{
         LayoutInflater inflater = (LayoutInflater)   mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         view  = inflater.inflate(R.layout.list_manga_item_view,null);
         TextView tv = (TextView) view.findViewById(R.id.manga_title);
+
         tv.setText(mItems.get(i).getNombre());
+
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Manga m = mItems.get(i);
-                Intent mIntent = new Intent(mContext,CapituloList.class);
-                mIntent.putExtra("manga",m);
-                mContext.startActivity(mIntent);
+                mListener.mangaSelected(m);
             }
         });
         return view;
