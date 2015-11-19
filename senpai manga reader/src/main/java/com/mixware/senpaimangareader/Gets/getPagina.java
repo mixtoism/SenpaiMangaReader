@@ -1,13 +1,16 @@
-package com.mixware.senpaimangareader;
+package com.mixware.senpaimangareader.Gets;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.jsoup.Jsoup;
+import com.mixware.senpaimangareader.DownloadService;
+import com.mixware.senpaimangareader.Gets.getMangas;
+import com.mixware.senpaimangareader.MangaView;
+import com.mixware.senpaimangareader.Utilidades;
+
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,13 +52,9 @@ public class getPagina extends AsyncTask<String,String,String> {
     protected String doInBackground(String... strings) {
         Document doc;
         try {
-            doc = Jsoup.connect(url).userAgent(USER_AGENT).get();
-            Element element = doc.getElementsByTag("img").get((font == 0 || font == 2) ? 0 : 1);
-            String img = ((font == 0 || font == 2) ? "":"http://esmanga.com/" ) + element.toString().split("src=\"")[1].split("\"")[0];
-
             URL imageUrl;
             HttpURLConnection conn;
-            imageUrl = new URL(img);
+            imageUrl = new URL(url);
             conn = (HttpURLConnection) imageUrl.openConnection();
             conn.connect();
             loadImage(conn.getInputStream());

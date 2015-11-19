@@ -1,8 +1,11 @@
-package com.mixware.senpaimangareader;
+package com.mixware.senpaimangareader.Gets;
 
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.mixware.senpaimangareader.FullscreenActivity;
+import com.mixware.senpaimangareader.Manga;
+import com.mixware.senpaimangareader.Utilidades;
 import com.mixware.senpaimangareader.scrappers.*;
 
 import java.io.File;

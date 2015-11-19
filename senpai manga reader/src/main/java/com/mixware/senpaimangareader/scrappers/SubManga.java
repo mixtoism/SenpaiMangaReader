@@ -80,10 +80,10 @@ public class SubManga {
         el = mElement.getElementsByTag("tr");
         for(int i=1; i < el.size(); i++ ) {
             Log.e("SENPAI",""+i+"");
-            if (i== 5998){}
-            else {
-                mElement = el.get(i);
-                String linea = mElement.getElementsByTag("a").toString();
+            mElement = el.get(i);
+            Elements el2 = mElement.getElementsByTag("a");
+            if (!el2.isEmpty()) {
+                String linea = el2.first().toString();
                 String nombre = linea.split("/b> ")[1].split("</a")[0];
                 String enlace = linea.split("href=\"")[1].split("\"")[0];
                 Manga m = new Manga(enlace, nombre);

@@ -1,17 +1,12 @@
 package com.mixware.senpaimangareader;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 
-import java.io.File;
-import java.io.IOException;
+import com.mixware.senpaimangareader.Gets.getMangas;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class FullscreenActivity extends Activity {

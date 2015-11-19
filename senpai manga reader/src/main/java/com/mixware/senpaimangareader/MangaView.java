@@ -16,7 +16,8 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.mixware.senpaimangareader.util.SystemUiHider;
+import com.mixware.senpaimangareader.Gets.getNumImagenes;
+import com.mixware.senpaimangareader.Gets.getPagina;
 
 import java.io.File;
 import java.io.FileOutputStream;

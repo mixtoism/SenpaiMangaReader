@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.mixware.senpaimangareader.Gets.getCapitulos;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -16,29 +18,25 @@ public class CapituloList extends ActionBarActivity implements DownloadCapitulo,
     private CapituloAdapter mAdapter;
     Manga m;
     ListView lv;
-    getPaginasCapitulos task;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         m = (Manga) this.getIntent().getSerializableExtra("manga");
+        CogerCapitulos();
         mAdapter = new CapituloAdapter(this,m,this);
 
         setContentView(R.layout.activity_capitulo_list);
         this.setTitle(m.getNombre());
-        task = new getPaginasCapitulos(this,m);
-        task.execute("");
         lv = (ListView) findViewById(R.id.listChap);
 
     }
 
     @Override
-    public void CogerCapitulos(ArrayList<String> paginas) {
-        if(paginas == null || paginas.isEmpty()) new getPaginasCapitulos(this,m).execute("");
-        for(String s : paginas) {
-            getCapitulos caps = new getCapitulos(this,s);
-            caps.execute();
-        }
-        task.cancel(true);
+    public void CogerCapitulos() {
+        getCapitulos task = new getCapitulos(this,m);
+        task.execute("");
     }
 
     @Override
@@ -84,21 +82,6 @@ public class CapituloList extends ActionBarActivity implements DownloadCapitulo,
             }
         }).start();
     }
-
-    /**
-     * Le pasa los capitulos offline al adapter
-     * @param nCaps chapter, only his name
-     */
-    @Override
-    public void CogerCapitulosOffline(ArrayList<String> nCaps) {
-        ArrayList<Capitulo> mCaps = new ArrayList<Capitulo>();
-        for(String s : nCaps) {
-            mCaps.add(new Capitulo(null,s));
-        }
-        mAdapter.addAll(mCaps);
-        lv.setAdapter(mAdapter);
-    }
-
 
     @Override
     public void startReading(Class mClass, Serializable path) {

@@ -10,8 +10,6 @@ import java.util.ArrayList;
 public interface DownloadCapitulo {
 
     public Context getApplicationContext();
-    public void CogerCapitulos(ArrayList<String> list);
-    public void CogerCapitulosOffline(ArrayList<String> list);
+    public void CogerCapitulos();
     public void addCapitulos(ArrayList<Capitulo> capitulos);
-    //public void capituloSelected(Capitulo capitulo,boolean availableOffline);
 }

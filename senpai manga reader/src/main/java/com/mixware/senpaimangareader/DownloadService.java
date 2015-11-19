@@ -17,6 +17,9 @@ import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.mixware.senpaimangareader.Gets.getNumImagenes;
+import com.mixware.senpaimangareader.Gets.getPagina;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -26,7 +26,7 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
     ListView lv;
     Context mContext;
     CapituloAdapter mAdapter;
-    getPaginasCapitulos task;
+    //getPaginasCapitulos task;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -103,8 +103,7 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
             lv = (ListView) v.findViewById(R.id.fragmentCapituloList);
         }
         mAdapter = new CapituloAdapter(mContext,m,this);
-        task = new  getPaginasCapitulos(this,m);
-        task.doInBackground("");
+
 
     }
 
@@ -114,26 +113,13 @@ public class capitulosFragment extends Fragment implements DownloadCapitulo, Cap
     }
 
         @Override
-        public void CogerCapitulos(ArrayList<String> paginas) {
-            if(paginas == null || paginas.isEmpty()) new getPaginasCapitulos(this,m).execute("");
-            for(String s : paginas) {
-                //getCapitulos caps = new getCapitulos(this,s);
-                //caps.execute();
-            }
-            task.cancel(true);
-        }
-
-        @Override
-        public void CogerCapitulosOffline(ArrayList<String> nCaps) {
-            ArrayList<Capitulo> mCaps = new ArrayList<Capitulo>();
-
-            for(String s : nCaps) {
-                mCaps.add(new Capitulo(null, s));
-            }
-            mAdapter.addAll(mCaps);
-            lv.setAdapter(mAdapter);
+        public void CogerCapitulos() {
 
         }
+
+
+
+
 
         @Override
         public void addCapitulos(ArrayList<Capitulo> capitulos) {
