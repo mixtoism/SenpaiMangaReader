@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FF8800"
-    tools:context="com.mixware.senpaimangareader.FullscreenActivity">
+    tools:context="com.mixware.senpaimangareader2.FullscreenActivity">
 
     <!-- The primary full-screen view. This can be replaced with whatever view
          is needed to present your content, e.g. VideoView, SurfaceView,
@@ -11,7 +11,7 @@
     <ImageView
         android:id="@+id/logoView"
         android:src="@drawable/wall"
-        android:layout_gravity="center_horizontal|top"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="49dp"

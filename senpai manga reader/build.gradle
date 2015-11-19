@@ -1,16 +1,21 @@
 apply plugin: 'android'
 
 android {
+    signingConfigs {
+    }
     compileSdkVersion 21
     buildToolsVersion '21.0.0'
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 21
-        versionCode 3
-        versionName '1.0.1'
+        versionCode 10
+        versionName '2.0.0'
     }
     buildTypes {
         release {
+            debuggable false
+            jniDebuggable false
+            renderscriptDebuggable false
         }
     }
     productFlavors {
@@ -18,7 +23,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/jsoup-1.7.3.jar')
     compile project(':library')
     compile files('libs/libGoogleAnalyticsServices.jar')

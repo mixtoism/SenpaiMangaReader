@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mixware.senpaimangareader"
+    package="com.mixware.senpaimangareader2"
     android:versionCode="3"
     android:versionName="Alex Daily Version" >
 
@@ -20,9 +20,9 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name=".FullscreenActivity"
+            android:name="com.mixware.senpaimangareader2.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/app_name"
+            android:label="@string/sort_name"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
             <intent-filter>
@@ -32,42 +32,42 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MangaList"
+            android:name="com.mixware.senpaimangareader2.MangaList"
             android:label="@string/title_activity_manga_list" >
         </activity>
         <activity
-            android:name=".CapituloList"
+            android:name="com.mixware.senpaimangareader2.CapituloList"
             android:label="@string/title_activity_capitulo_list" >
         </activity>
         <activity
-            android:name=".MangaView"
+            android:name="com.mixware.senpaimangareader2.MangaView"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_manga_view"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name="com.mixware.senpaimangareader2.MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
 
         <service
-            android:name=".DownloadService"
+            android:name="com.mixware.senpaimangareader2.services.DownloadService"
             android:enabled="true"
             android:exported="true" >
         </service>
 
         <activity
-            android:name=".OfflineViewer"
+            android:name="com.mixware.senpaimangareader2.OfflineViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_offline_viewer"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".Settings"
+            android:name="com.mixware.senpaimangareader2.Settings"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name=".aboutJSOUP"
+            android:name="com.mixware.senpaimangareader2.aboutJSOUP"
             android:label="@string/title_activity_about_jsoup" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -76,7 +76,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".aboutPhotoView"
+            android:name="com.mixware.senpaimangareader2.aboutPhotoView"
             android:label="@string/title_activity_about_photo_view" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -88,14 +88,14 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
-            android:name=".OnlineReaderAd"
+            android:name="com.mixware.senpaimangareader2.OnlineReaderAd"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_online_reader_ad"
             android:noHistory="true"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".activity_tablets"
+            android:name="com.mixware.senpaimangareader2.activity_tablets"
             android:label="@string/title_activity_activity_tablets" >
         </activity>
     </application>
