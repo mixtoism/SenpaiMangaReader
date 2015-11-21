@@ -29,16 +29,13 @@ public class FullscreenActivity extends Activity {
 
 
     public void nextActivity(final ArrayList<Manga> mangas) {
-        if (mangas == null || mangas.isEmpty()) (new getMangas(this)).execute("");
-        else {
-
-
+       // if (mangas == null || mangas.isEmpty()) (new getMangas(this)).execute("");
             Intent mIntent;
             //May have problem with custom roms check in cyanogen
             mIntent = new Intent(FullscreenActivity.this, MangaList.class);
-            mIntent.putExtra("lista", mangas);
+            //mIntent.putExtra("lista", mangas);
             startActivity(mIntent);
 
-        }
+
     }
 }

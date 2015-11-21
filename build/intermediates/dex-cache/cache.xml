@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="C:\Users\pargon\.gradle\caches\modules-2\files-2.1\org.jsoup\jsoup\1.8.3\65fd012581ded67bc20945d85c32b4598c3a9cf1\jsoup-1.8.3.jar"
+        jumboMode="false"
+        revision="21.0.0"
+        sha1="65fd012581ded67bc20945d85c32b4598c3a9cf1">
+        <dex dex="C:\Users\pargon\Android Studio Projects\SenpaiMangaReader\senpai manga reader\build\intermediates\pre-dexed\debug\jsoup-1.8.3-03a230456971f7a74d9d53061b7a3b671d1676c7.jar" />
+    </item>
+
+</items>

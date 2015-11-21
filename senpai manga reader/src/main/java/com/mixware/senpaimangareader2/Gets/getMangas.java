@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class getMangas extends AsyncTask<String,String,String> {
 
-
+    boolean DEBUG  = true;
     private FullscreenActivity mActivity;
     ArrayList<Manga> mangas;
     public static int font;
@@ -32,7 +32,7 @@ public class getMangas extends AsyncTask<String,String,String> {
         try {
             mangas = new ArrayList<Manga>();
             String path = mActivity.getExternalFilesDir(null)+"/mangas.dat";
-            if((new File(path)).exists()) { // if already has an offline copy
+            if(!DEBUG && (new File(path)).exists()) { // if already has an offline copy
                 //ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
                 mangas.add(new Manga("",""));
             }
@@ -45,7 +45,7 @@ public class getMangas extends AsyncTask<String,String,String> {
         } catch (IOException ex) {
             mangas = null;
             ex.printStackTrace();
-             Log.i("getMangas TASK","ERROR DOWNLOADING");
+            Log.i("getMangas TASK","ERROR DOWNLOADING");
 
         }
         return null;
@@ -53,6 +53,6 @@ public class getMangas extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String res) {
-        mActivity.nextActivity(mangas);
+        mActivity.nextActivity(null);
     }
 }
