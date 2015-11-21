@@ -8,9 +8,6 @@
     <string name="pref_title_social_recommendations">Gesto de Cambio de Página</string>
     <string name="pref_description_social_recommendations">Desplazamiento hacia la derecha. Función No habilitada</string>
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
     <string name="pref_source_selection">Fuente</string>
     <string-array name="pref_source_selection">
         <item>submanga.com</item>

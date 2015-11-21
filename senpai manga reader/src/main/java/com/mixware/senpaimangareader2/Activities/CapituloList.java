@@ -1,4 +1,4 @@
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import com.mixware.senpaimangareader2.CapituloListListener;
+import com.mixware.senpaimangareader2.DownloadCapitulo;
 import com.mixware.senpaimangareader2.Gets.getCapitulos;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.Model.Manga;
+import com.mixware.senpaimangareader2.R;
 import com.mixware.senpaimangareader2.adapters.CapituloAdapter;
 
 import java.io.Serializable;

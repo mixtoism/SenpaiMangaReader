@@ -17,11 +17,11 @@ import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.mixware.senpaimangareader2.Capitulo;
+import com.mixware.senpaimangareader2.Activities.OfflineViewer;
 import com.mixware.senpaimangareader2.Gets.getNumImagenes;
 import com.mixware.senpaimangareader2.Gets.getPagina;
-import com.mixware.senpaimangareader2.Manga;
-import com.mixware.senpaimangareader2.OfflineViewer;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.Model.Manga;
 import com.mixware.senpaimangareader2.R;
 
 import java.io.File;
@@ -197,6 +197,7 @@ public class DownloadService extends Service {
     }
     int contador=0;
     public void writeToDisk(Bitmap im, int i){
+        if (i == 0) contador = 0;
         contador++;
         String estado = Environment.getExternalStorageState();
         if(estado.equals(Environment.MEDIA_MOUNTED)) {

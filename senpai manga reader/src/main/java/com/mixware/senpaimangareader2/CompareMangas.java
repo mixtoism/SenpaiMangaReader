@@ -1,5 +1,7 @@
 package com.mixware.senpaimangareader2;
 
+import com.mixware.senpaimangareader2.Model.Manga;
+
 import java.util.Comparator;
 
 /**

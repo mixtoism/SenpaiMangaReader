@@ -2,6 +2,8 @@ package com.mixware.senpaimangareader2;
 
 import android.content.Context;
 
+import com.mixware.senpaimangareader2.Model.Capitulo;
+
 import java.util.ArrayList;
 
 /**

@@ -1,8 +1,8 @@
 package com.mixware.senpaimangareader2.scrappers;
 
-import com.mixware.senpaimangareader2.Capitulo;
 import com.mixware.senpaimangareader2.CompareMangas;
-import com.mixware.senpaimangareader2.Manga;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.Model.Manga;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

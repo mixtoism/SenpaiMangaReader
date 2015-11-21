@@ -1,9 +1,7 @@
 package com.mixware.senpaimangareader2;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.SearchView;
@@ -13,6 +11,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.mixware.senpaimangareader2.Activities.CapituloList;
+import com.mixware.senpaimangareader2.Activities.FullscreenActivity;
+import com.mixware.senpaimangareader2.Model.Manga;
 import com.mixware.senpaimangareader2.adapters.MangaAdapter;
 
 import java.io.File;
@@ -29,24 +30,19 @@ public class MangaList extends ActionBarActivity implements MangaListListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setTitle("Listado de Mangas");
-        SharedPreferences sp;
         ArrayList<Manga> mangas = null;
-        sp = PreferenceManager.getDefaultSharedPreferences(this);
-        int font = Integer.parseInt(sp.getString("source","1"));
-
-            String path = getExternalFilesDir(null)+"/mangas.dat";
-            if( (new File(path)).exists()) { // if already has an offline copy
-                ObjectInputStream ois = null;
-                try {
-                    ois = new ObjectInputStream(new FileInputStream(path));
-                    mangas = (ArrayList<Manga>)ois.readObject();
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                }
+        String path = getExternalFilesDir(null)+"/mangas.dat";
+        if( (new File(path)).exists()) { // if already has an offline copy
+            ObjectInputStream ois = null;
+            try {
+                ois = new ObjectInputStream(new FileInputStream(path));
+                mangas = (ArrayList<Manga>)ois.readObject();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
+        }
 
         setContentView(R.layout.activity_manga_list);
         mAdapter = new MangaAdapter(mangas,this,this);

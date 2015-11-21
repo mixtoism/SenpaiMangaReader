@@ -1,6 +1,8 @@
 package com.mixware.senpaimangareader2;
 
 
+import com.mixware.senpaimangareader2.Model.Capitulo;
+
 import java.io.Serializable;
 
 /**

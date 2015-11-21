@@ -20,7 +20,7 @@
             android:value="@integer/google_play_services_version" />
 
         <activity
-            android:name="com.mixware.senpaimangareader2.FullscreenActivity"
+            android:name=".Activities.FullscreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/sort_name"
             android:screenOrientation="portrait"
@@ -36,17 +36,17 @@
             android:label="@string/title_activity_manga_list" >
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.CapituloList"
+            android:name=".Activities.CapituloList"
             android:label="@string/title_activity_capitulo_list" >
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.MangaView"
+            android:name=".Activities.MangaView"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_manga_view"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.MainActivity"
+            android:name=".Activities.MainActivity"
             android:label="@string/title_activity_main" >
         </activity>
 
@@ -57,7 +57,7 @@
         </service>
 
         <activity
-            android:name="com.mixware.senpaimangareader2.OfflineViewer"
+            android:name=".Activities.OfflineViewer"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_offline_viewer"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
@@ -67,7 +67,7 @@
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.aboutJSOUP"
+            android:name=".Activities.aboutJSOUP"
             android:label="@string/title_activity_about_jsoup" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -76,7 +76,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.aboutPhotoView"
+            android:name=".Activities.aboutPhotoView"
             android:label="@string/title_activity_about_photo_view" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -88,7 +88,7 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
-            android:name="com.mixware.senpaimangareader2.OnlineReaderAd"
+            android:name=".Activities.OnlineReaderAd"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_online_reader_ad"
             android:noHistory="true"

@@ -5,11 +5,10 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mixware.senpaimangareader2.Capitulo;
-import com.mixware.senpaimangareader2.services.DownloadService;
-import com.mixware.senpaimangareader2.MangaView;
+import com.mixware.senpaimangareader2.Activities.MangaView;
+import com.mixware.senpaimangareader2.Model.Capitulo;
 import com.mixware.senpaimangareader2.scrappers.SubManga;
-
+import com.mixware.senpaimangareader2.services.DownloadService;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;

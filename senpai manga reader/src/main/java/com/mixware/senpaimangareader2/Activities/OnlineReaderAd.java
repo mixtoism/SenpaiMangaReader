@@ -1,4 +1,4 @@
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.R;
 
 
 public class OnlineReaderAd extends Activity {

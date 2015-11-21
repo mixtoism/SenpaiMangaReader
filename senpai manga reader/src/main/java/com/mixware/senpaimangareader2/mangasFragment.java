@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.mixware.senpaimangareader2.Model.Manga;
 import com.mixware.senpaimangareader2.adapters.MangaAdapter;
 
 import java.io.File;

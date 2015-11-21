@@ -46,7 +46,7 @@ public class Utilidades {
     public static int getSource(Context mContext) {
         SharedPreferences sp;
         sp = PreferenceManager.getDefaultSharedPreferences(mContext);
-        return Integer.parseInt(sp.getString("source","1"));
+        return Integer.parseInt(sp.getString("source","0"));
     }
 
 

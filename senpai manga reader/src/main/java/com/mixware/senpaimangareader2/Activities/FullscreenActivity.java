@@ -1,12 +1,12 @@
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.mixware.senpaimangareader2.Gets.getMangas;
-
-import java.util.ArrayList;
+import com.mixware.senpaimangareader2.MangaList;
+import com.mixware.senpaimangareader2.R;
 
 
 public class FullscreenActivity extends Activity {
@@ -28,17 +28,11 @@ public class FullscreenActivity extends Activity {
     }
 
 
-    public void nextActivity(final ArrayList<Manga> mangas) {
-        if (mangas == null || mangas.isEmpty()) (new getMangas(this)).execute("");
-        else {
-
-
-            Intent mIntent;
-            //May have problem with custom roms check in cyanogen
-            mIntent = new Intent(FullscreenActivity.this, MangaList.class);
-            mIntent.putExtra("lista", mangas);
-            startActivity(mIntent);
-
-        }
+    public void nextActivity(int ret) {
+        if (ret != 0)
+            (new getMangas(this)).execute(""); //Error en la descarga
+        Intent mIntent;
+        mIntent = new Intent(FullscreenActivity.this, MangaList.class);
+        startActivity(mIntent);
     }
 }

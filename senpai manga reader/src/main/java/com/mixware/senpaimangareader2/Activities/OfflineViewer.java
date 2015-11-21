@@ -1,4 +1,4 @@
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Activities;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -10,10 +10,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mixware.senpaimangareader2.MangaPageViewAttacher;
+import com.mixware.senpaimangareader2.MangaReader;
+import com.mixware.senpaimangareader2.R;
+
 import java.io.File;
 
 
-public class OfflineViewer extends Activity implements MangaReader{
+public class OfflineViewer extends Activity implements MangaReader {
     private MangaPageViewAttacher mAttacher;
     private ImageView image;
     public Bitmap actual,anterior,siguiente;

@@ -3,9 +3,9 @@ package com.mixware.senpaimangareader2.Gets;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mixware.senpaimangareader2.Capitulo;
-import com.mixware.senpaimangareader2.CapituloList;
-import com.mixware.senpaimangareader2.Manga;
+import com.mixware.senpaimangareader2.Activities.CapituloList;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.Model.Manga;
 import com.mixware.senpaimangareader2.Utilidades;
 import com.mixware.senpaimangareader2.scrappers.SubManga;
 

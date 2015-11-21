@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

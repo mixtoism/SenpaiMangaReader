@@ -5,9 +5,9 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mixware.senpaimangareader2.services.DownloadService;
-import com.mixware.senpaimangareader2.MangaView;
+import com.mixware.senpaimangareader2.Activities.MangaView;
 import com.mixware.senpaimangareader2.Utilidades;
+import com.mixware.senpaimangareader2.services.DownloadService;
 
 import org.jsoup.nodes.Document;
 

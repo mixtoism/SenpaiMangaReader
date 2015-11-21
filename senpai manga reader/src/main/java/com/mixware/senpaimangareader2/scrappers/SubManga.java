@@ -6,16 +6,19 @@ package com.mixware.senpaimangareader2.scrappers;
  * and open the template in the editor.
  */
 
- import com.mixware.senpaimangareader2.Capitulo;
- import com.mixware.senpaimangareader2.Manga;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.Model.Manga;
+import com.mixware.senpaimangareader2.Parallel.Parallel;
 
- import java.io.IOException;
- import java.util.ArrayList;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
- import org.jsoup.Jsoup;
- import org.jsoup.nodes.Document;
- import org.jsoup.nodes.Element;
- import org.jsoup.select.Elements;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -39,53 +42,70 @@ public class SubManga {
         return paginas;
     }
     public static ArrayList<Capitulo> getCapitulos(Manga m)throws IOException{
-        ArrayList<Capitulo> cap = new ArrayList<>();
+        final List cap = Collections.synchronizedList(new ArrayList<Capitulo>());
         Document doc = Jsoup.connect(m.getEnlace() + "/completa").userAgent(USER_AGENT).get();
         Elements el = doc.getElementsByClass("b468");
         Element mElement = el.get(0);
         mElement = mElement.getElementsByTag("table").get(0);
         el = mElement.getElementsByTag("td");
-        for(int i=0; i < el.size(); i++) {
-            mElement = el.get(i);
-            String linea = mElement.toString();
-            try {
-                String enlace = linea.split("href=\"")[1].split("\"")[0];
-                String numero = enlace.split("/")[4];
-                enlace = "http://submanga.com/c/" + enlace.split("/")[5];
-                boolean check;
+        Parallel.blockingFor(el, new Parallel.Operation<Element>() {
+            @Override
+            public void perform(Element mElement) {
+                String linea = mElement.toString();
                 try {
-                    Integer.parseInt(numero);
-                    check = true;
-                } catch (NumberFormatException numEx) {
-                    check = false;
+                    String enlace = linea.split("href=\"")[1].split("\"")[0];
+                    String numero = enlace.split("/")[4];
+                    enlace = "http://submanga.com/c/" + enlace.split("/")[5];
+                    boolean check;
+                    try {
+                        Integer.parseInt(numero);
+                        check = true;
+                    } catch (NumberFormatException numEx) {
+                        check = false;
+                    }
+                    if (check) {
+                        Capitulo c = new Capitulo(enlace, numero);
+                        cap.add(c);
+                    }
+                } catch (IndexOutOfBoundsException ex) {
                 }
-                if (check) {
-                    Capitulo c = new Capitulo(enlace, numero);
-                    cap.add(c);
-                }
-            } catch (IndexOutOfBoundsException ex) {
             }
-        }
-        return cap;
+        });
+
+        ArrayList<Capitulo> c = new ArrayList<>();
+        Collections.sort(cap, new Capitulo(null,null));
+        c.addAll(cap);
+        return c;
     }
+
+    /**
+     * Recoge los mangas de Submanga - version paralela
+     * @return All mangas in web page
+     * @throws IOException
+     */
     public static ArrayList<Manga> getMangas() throws IOException {
-        ArrayList<Manga> mangas = new ArrayList<Manga>();
+        final List mangas =  Collections.synchronizedList( new ArrayList<Manga>(10000) );
         Document doc = Jsoup.connect("http://submanga.com/series").userAgent(USER_AGENT).get();
         Elements el = doc.getElementsByClass("b468");
         Element mElement = el.get(0);
         mElement = mElement.getElementsByTag("table").get(0);
         el = mElement.getElementsByTag("tr");
-        for(int i=1; i < el.size(); i++ ) {
-            mElement = el.get(i);
-            Elements el2 = mElement.getElementsByTag("a");
-            if (!el2.isEmpty()) {
-                String linea = el2.first().toString();
-                String nombre = linea.split("/b> ")[1].split("</a")[0];
-                String enlace = linea.split("href=\"")[1].split("\"")[0];
-                Manga m = new Manga(enlace, nombre);
-                mangas.add(m);
+
+        Parallel.blockingFor(el, new Parallel.Operation<Element>() {
+            @Override
+            public void perform(Element mElement) {
+                Elements el2 = mElement.getElementsByTag("a");
+                if (!el2.isEmpty()) {
+                    String linea = el2.first().toString();
+                    String nombre = linea.split("/b> ")[1].split("</a")[0];
+                    String enlace = linea.split("href=\"")[1].split("\"")[0];
+                    Manga m = new Manga(enlace, nombre);
+                    mangas.add(m);
+                }
             }
-        }
-        return mangas;
+        });
+        ArrayList<Manga> aL = (new ArrayList<Manga>());
+        aL.addAll(mangas);
+        return aL;
     }
 }

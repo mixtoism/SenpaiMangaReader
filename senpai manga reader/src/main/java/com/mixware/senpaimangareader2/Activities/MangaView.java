@@ -1,4 +1,4 @@
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.mixware.senpaimangareader2.Gets.getNumImagenes;
 import com.mixware.senpaimangareader2.Gets.getPagina;
+import com.mixware.senpaimangareader2.MangaPageViewAttacher;
+import com.mixware.senpaimangareader2.MangaReader;
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.R;
 
 import java.io.File;
 import java.io.FileOutputStream;

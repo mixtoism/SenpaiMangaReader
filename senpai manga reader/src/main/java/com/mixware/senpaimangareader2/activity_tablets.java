@@ -6,6 +6,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mixware.senpaimangareader2.Model.Capitulo;
+import com.mixware.senpaimangareader2.Model.Manga;
+
 import java.io.Serializable;
 
 public class activity_tablets extends ActionBarActivity implements mangasFragment.ListSelectionListener,capitulosFragment.OnCapituloSelected{

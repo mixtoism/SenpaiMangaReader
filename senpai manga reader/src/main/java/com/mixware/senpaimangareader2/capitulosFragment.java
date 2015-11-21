@@ -9,6 +9,8 @@
     import android.view.ViewGroup;
     import android.widget.ListView;
 
+    import com.mixware.senpaimangareader2.Model.Capitulo;
+    import com.mixware.senpaimangareader2.Model.Manga;
     import com.mixware.senpaimangareader2.adapters.CapituloAdapter;
 
     import java.io.Serializable;

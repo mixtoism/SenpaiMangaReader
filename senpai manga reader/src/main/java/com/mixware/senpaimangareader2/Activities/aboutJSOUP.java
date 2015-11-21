@@ -1,7 +1,9 @@
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
+import com.mixware.senpaimangareader2.R;
 
 public class aboutJSOUP extends ActionBarActivity {
 

@@ -24,7 +24,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile files('libs/jsoup-1.7.3.jar')
     compile project(':library')
     compile files('libs/libGoogleAnalyticsServices.jar')
     // You must install or update the Support Repository through the SDK manager to use this dependency.
@@ -37,4 +36,5 @@ dependencies {
     // You must install or update the Support Repository through the SDK manager to use this dependency.
     compile 'com.android.support:support-v4:19.+'
     compile 'com.google.android.gms:play-services:+'
+    compile 'org.jsoup:jsoup:1.8.3'
 }

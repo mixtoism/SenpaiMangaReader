@@ -4,15 +4,16 @@
  * and open the template in the editor.
  */
 
-package com.mixware.senpaimangareader2;
+package com.mixware.senpaimangareader2.Model;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 /**
  *
  * @author pargon
  */
-public class Capitulo implements Serializable {
+public class Capitulo implements Serializable, Comparator<Capitulo> {
     private String enlace;
     private String Capitulo;
     private boolean readed;
@@ -50,6 +51,12 @@ public class Capitulo implements Serializable {
 
     public boolean isReaded() {
         return readed;
+    }
+
+    @Override
+    public int compare(Capitulo lhs, Capitulo rhs) {
+        return new Integer(Integer.parseInt(rhs.getCapitulo())).
+                compareTo(new Integer(Integer.parseInt(lhs.getCapitulo())));
     }
 
     @Override

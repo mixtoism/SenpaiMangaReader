@@ -3,10 +3,10 @@ package com.mixware.senpaimangareader2.Gets;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.mixware.senpaimangareader2.FullscreenActivity;
-import com.mixware.senpaimangareader2.Manga;
+import com.mixware.senpaimangareader2.Activities.FullscreenActivity;
+import com.mixware.senpaimangareader2.Model.Manga;
 import com.mixware.senpaimangareader2.Utilidades;
-import com.mixware.senpaimangareader2.scrappers.*;
+import com.mixware.senpaimangareader2.scrappers.SubManga;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,10 +18,11 @@ import java.util.ArrayList;
  */
 public class getMangas extends AsyncTask<String,String,String> {
 
-
+    boolean DEBUG  = true;
     private FullscreenActivity mActivity;
     ArrayList<Manga> mangas;
     public static int font;
+    int code;
     public getMangas(FullscreenActivity fa) {
         mActivity = fa;
         font = Utilidades.getSource(mActivity);
@@ -33,19 +34,22 @@ public class getMangas extends AsyncTask<String,String,String> {
             mangas = new ArrayList<Manga>();
             String path = mActivity.getExternalFilesDir(null)+"/mangas.dat";
             if((new File(path)).exists()) { // if already has an offline copy
-                //ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path));
-                mangas.add(new Manga("",""));
+                code = 0;
             }
             else {
-                 mangas = SubManga.getMangas();
+                if (font == 0)
+                    mangas = SubManga.getMangas();
+                //if (font == 1)
+                    //mangas = Scrapper.getMangas();
+                else //Valor por defecto
+                    mangas = SubManga.getMangas();
 
                 ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path));
                 oos.writeObject(mangas);
             }
         } catch (IOException ex) {
-            mangas = null;
-            ex.printStackTrace();
-             Log.i("getMangas TASK","ERROR DOWNLOADING");
+            code = 1;
+            Log.i("getMangas TASK","ERROR DOWNLOADING");
 
         }
         return null;
@@ -53,6 +57,6 @@ public class getMangas extends AsyncTask<String,String,String> {
 
     @Override
     protected void onPostExecute(String res) {
-        mActivity.nextActivity(mangas);
+        mActivity.nextActivity(code);
     }
 }

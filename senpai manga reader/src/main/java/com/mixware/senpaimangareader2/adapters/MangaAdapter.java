@@ -9,8 +9,8 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
-import com.mixware.senpaimangareader2.Manga;
 import com.mixware.senpaimangareader2.MangaListListener;
+import com.mixware.senpaimangareader2.Model.Manga;
 import com.mixware.senpaimangareader2.R;
 
 import java.util.ArrayList;
