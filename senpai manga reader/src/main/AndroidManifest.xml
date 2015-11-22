@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mixware.senpaimangareader2"
+    package="com.mixware.senpaireader"
     android:versionCode="3"
     android:versionName="Alex Daily Version" >
 
@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.MangaList"
+            android:name=".Activities.MangaList"
             android:label="@string/title_activity_manga_list" >
         </activity>
         <activity
@@ -51,7 +51,7 @@
         </activity>
 
         <service
-            android:name="com.mixware.senpaimangareader2.services.DownloadService"
+            android:name=".services.DownloadService"
             android:enabled="true"
             android:exported="true" >
         </service>
@@ -63,7 +63,7 @@
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name="com.mixware.senpaimangareader2.Settings"
+            android:name=".Settings"
             android:label="@string/title_activity_settings" >
         </activity>
         <activity
@@ -88,14 +88,7 @@
             android:name="com.google.android.gms.ads.AdActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize" />
         <activity
-            android:name=".Activities.OnlineReaderAd"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_online_reader_ad"
-            android:noHistory="true"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
-        </activity>
-        <activity
-            android:name="com.mixware.senpaimangareader2.activity_tablets"
+            android:name=".activity_tablets"
             android:label="@string/title_activity_activity_tablets" >
         </activity>
     </application>

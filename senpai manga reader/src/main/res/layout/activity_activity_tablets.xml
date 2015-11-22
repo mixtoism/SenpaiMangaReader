@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    tools:context="com.mixware.senpaimangareader2.activity_tablets">
+    tools:context="com.mixware.senpaireader.activity_tablets">
 
 
     <fragment
         android:layout_width="1px"
         android:layout_height="match_parent"
         android:layout_weight="5"
-        android:name="com.mixware.senpaimangareader2.mangasFragment"
+        android:name="com.mixware.senpaireader.mangasFragment"
         android:id="@+id/fragment"
         android:layout_gravity="left"/>
 
@@ -20,7 +20,7 @@
         android:layout_width="1px"
         android:layout_height="match_parent"
         android:layout_weight="4"
-        android:name="com.mixware.senpaimangareader2.capitulosFragment"
+        android:name="com.mixware.senpaireader.capitulosFragment"
         android:id="@+id/fragment2"
         android:layout_gravity="right" />
 </LinearLayout>
